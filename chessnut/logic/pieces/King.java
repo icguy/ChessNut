@@ -1,26 +1,25 @@
 package chessnut.logic.pieces;
 
 import java.util.ArrayList;
-import chessnut.logic.PieceColor;
-import chessnut.logic.Position;
+import chessnut.logic.*;
 
 public class King extends Piece
 {
-	public King(PieceColor color)
+	public King(PlayerColor color)
 	{
 		super(color);
 		// TODO Auto-generated constructor stub
 	}
 
 	@Override
-	protected boolean canMoveInner(Position start, Position end)
+	protected boolean canMoveInner(Move move)
 	{
 		// TODO Auto-generated method stub
 		return false;
 	}
 
 	@Override
-	public ArrayList<Position> getAllMoves(Position pos)
+	public ArrayList<Move> getAllMoves(Position pos)
 	{
 		// TODO Auto-generated method stub
 		return null;
@@ -29,6 +28,27 @@ public class King extends Piece
 	@Override
 	public String toString()
 	{
-		return color == PieceColor.White ? "K" : "k";
+		return color == PlayerColor.White ? "K" : "k";
+	}
+
+	@Override
+	public ArrayList<Move> getPossibleMoves(Position pos, ChessBoard board)
+	{
+		ArrayList<Move> moves = new ArrayList<>();
+		
+		for (int i = -1; i <= 1 ; i++)
+		{
+			for (int j = -1; j <= 1; j++)
+			{
+				Position currPos = Position.tryCreate(pos.getRank() + i, pos.getFile()+j);
+				if(currPos == null)
+					continue;
+								
+				Piece currPiece = board.getPiece(currPos);
+				if (currPiece == null || currPiece.getColor() != color) //if square is empty or occupied by enemy piece
+					moves.add(new Move(pos, currPos));
+			}
+		}
+		return moves;
 	}
 }

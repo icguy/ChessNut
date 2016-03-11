@@ -1,26 +1,25 @@
 package chessnut.logic.pieces;
 
 import java.util.ArrayList;
-import chessnut.logic.PieceColor;
-import chessnut.logic.Position;
+import chessnut.logic.*;
 
 public class Bishop extends Piece
 {
-	public Bishop(PieceColor color)
+	public Bishop(PlayerColor color)
 	{
 		super(color);
 		// TODO Auto-generated constructor stub
 	}
 
 	@Override
-	protected boolean canMoveInner(Position start, Position end)
+	protected boolean canMoveInner(Move move)
 	{
 		// TODO Auto-generated method stub
 		return false;
 	}
 
 	@Override
-	public ArrayList<Position> getAllMoves(Position pos)
+	public ArrayList<Move> getAllMoves(Position pos)
 	{
 		// TODO Auto-generated method stub
 		return null;
@@ -29,6 +28,13 @@ public class Bishop extends Piece
 	@Override
 	public String toString()
 	{
-		return color == PieceColor.White ? "B" : "b";
+		return color == PlayerColor.White ? "B" : "b";
+	}
+
+	@Override
+	public ArrayList<Move> getPossibleMoves(Position pos, ChessBoard board)
+	{
+		// TODO Auto-generated method stub
+		return null;
 	}
 }

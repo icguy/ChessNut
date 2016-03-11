@@ -5,28 +5,26 @@ import chessnut.logic.*;
 
 public abstract class Piece
 {
-	PieceColor color;
+	final PlayerColor color;
 
-	public boolean canMove(Position start, Position end)
-	{
-		if (!inRange(end))
-			return false;
-		return canMoveInner(start, end);
-	}
-
-	protected abstract boolean canMoveInner(Position start, Position end);
-
-	public Piece(PieceColor color)
+	public Piece(PlayerColor color)
 	{
 		this.color = color;
 	}
 
-	public abstract ArrayList<Position> getAllMoves(Position pos);
-
-	static boolean inRange(Position move)
+	public boolean canMove(Move move)
 	{
-		int rank = move.getRank();
-		int file = move.getFile();
-		return rank >= 0 && rank < 8 && file >= 0 && file < 8;
+		return canMoveInner(move);
 	}
+
+	protected abstract boolean canMoveInner(Move move);
+
+	public PlayerColor getColor()
+	{
+		return color;
+	}
+
+	public abstract ArrayList<Move> getAllMoves(Position pos);
+	
+	public abstract ArrayList<Move> getPossibleMoves(Position pos, ChessBoard board);
 }

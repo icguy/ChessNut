@@ -1,6 +1,6 @@
 package chessnut.logic;
 
-public enum PieceColor
+public enum PlayerColor
 {
 	White,
 	Black

@@ -1,27 +1,26 @@
 package chessnut.logic.pieces;
 
 import java.util.ArrayList;
-import chessnut.logic.PieceColor;
-import chessnut.logic.Position;
+import chessnut.logic.*;
 
 public class Queen extends Piece
 {
 
-	public Queen(PieceColor color)
+	public Queen(PlayerColor color)
 	{
 		super(color);
 		// TODO Auto-generated constructor stub
 	}
 
 	@Override
-	protected boolean canMoveInner(Position start, Position end)
+	protected boolean canMoveInner(Move move)
 	{
 		// TODO Auto-generated method stub
 		return false;
 	}
 
 	@Override
-	public ArrayList<Position> getAllMoves(Position pos)
+	public ArrayList<Move> getAllMoves(Position pos)
 	{
 		// TODO Auto-generated method stub
 		return null;
@@ -30,6 +29,13 @@ public class Queen extends Piece
 	@Override
 	public String toString()
 	{
-		return color == PieceColor.White ? "Q" : "q";
+		return color == PlayerColor.White ? "Q" : "q";
+	}
+
+	@Override
+	public ArrayList<Move> getPossibleMoves(Position pos, ChessBoard board)
+	{
+		// TODO Auto-generated method stub
+		return null;
 	}
 }
