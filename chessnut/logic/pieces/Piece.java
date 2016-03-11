@@ -27,4 +27,34 @@ public abstract class Piece
 	public abstract ArrayList<Move> getAllMoves(Position pos);
 	
 	public abstract ArrayList<Move> getPossibleMoves(Position pos, ChessBoard board);
+	
+	protected void addMovesInDirection(Position pos, ChessBoard board,
+			ArrayList<Move> moves, int rankDir, int fileDir)
+	{
+		int rank = pos.getRank();
+		int file = pos.getFile();
+		for (int i = 1;; i++)
+		{
+			Position currPos = Position.tryCreate(rank + i * rankDir,
+					file + i * fileDir);
+			if (currPos == null)
+				break;
+
+			Piece currPiece = board.getPiece(currPos);
+			if (currPiece == null)
+			{
+				moves.add(new Move(pos, currPos));
+				continue;
+			}
+			if (currPiece.getColor() != color)
+			{
+				moves.add(new Move(pos, currPos));
+				break;
+			}
+			else
+			{
+				break;
+			}
+		}
+	}
 }

@@ -35,7 +35,11 @@ public class Rook extends Piece
 	@Override
 	public ArrayList<Move> getPossibleMoves(Position pos, ChessBoard board)
 	{
-		// TODO Auto-generated method stub
-		return null;
+		ArrayList<Move> moves = new ArrayList<>();
+		addMovesInDirection(pos, board, moves, 1, 0); //up
+		addMovesInDirection(pos, board, moves, -1, 0); //down
+		addMovesInDirection(pos, board, moves, 0, 1); //right
+		addMovesInDirection(pos, board, moves, 0, -1); //left
+		return moves;
 	}
 }

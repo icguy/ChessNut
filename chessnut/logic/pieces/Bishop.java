@@ -24,7 +24,7 @@ public class Bishop extends Piece
 		// TODO Auto-generated method stub
 		return null;
 	}
-	
+
 	@Override
 	public String toString()
 	{
@@ -34,7 +34,12 @@ public class Bishop extends Piece
 	@Override
 	public ArrayList<Move> getPossibleMoves(Position pos, ChessBoard board)
 	{
-		// TODO Auto-generated method stub
-		return null;
+		ArrayList<Move> moves = new ArrayList<>();
+		addMovesInDirection(pos, board, moves, 1, -1); //up-left
+		addMovesInDirection(pos, board, moves, -1, -1); //down-left
+		addMovesInDirection(pos, board, moves, 1, 1); //up-right
+		addMovesInDirection(pos, board, moves, -1, 1); //down-right
+
+		return moves;
 	}
 }

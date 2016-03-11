@@ -1,8 +1,6 @@
 package chessnut.logic;
 
 import java.util.ArrayList;
-import java.util.Iterator;
-import javax.xml.bind.helpers.NotIdentifiableEventImpl;
 import chessnut.logic.pieces.*;
 
 /*
