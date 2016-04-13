@@ -12,23 +12,23 @@ public abstract class Piece
 		this.color = color;
 	}
 
-	public boolean canMove(Move move)
+	public boolean canMove(Move move, ChessBoard board)
 	{
-		return canMoveInner(move);
+		final ArrayList<Move> possibleMoves = getPossibleMoves(move.getStart(), board);
+		//TODO: ha nincs a possiblemoves-ban, akkor return false
+		return canMoveInner(move, board);
 	}
 
-	protected abstract boolean canMoveInner(Move move);
+	protected abstract boolean canMoveInner(Move move, ChessBoard board);
 
 	public PlayerColor getColor()
 	{
 		return color;
 	}
 
-	public abstract ArrayList<Move> getAllMoves(Position pos);
-	
 	public abstract ArrayList<Move> getPossibleMoves(Position pos, ChessBoard board);
 	
-	protected void addMovesInDirection(Position pos, ChessBoard board,
+	protected final void addMovesInDirection(Position pos, ChessBoard board,
 			ArrayList<Move> moves, int rankDir, int fileDir)
 	{
 		int rank = pos.getRank();

@@ -8,21 +8,13 @@ public class Bishop extends Piece
 	public Bishop(PlayerColor color)
 	{
 		super(color);
-		// TODO Auto-generated constructor stub
 	}
 
 	@Override
-	protected boolean canMoveInner(Move move)
+	protected boolean canMoveInner(Move move, ChessBoard board)
 	{
 		// TODO Auto-generated method stub
 		return false;
-	}
-
-	@Override
-	public ArrayList<Move> getAllMoves(Position pos)
-	{
-		// TODO Auto-generated method stub
-		return null;
 	}
 
 	@Override
