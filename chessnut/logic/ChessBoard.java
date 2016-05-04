@@ -12,6 +12,7 @@ public class ChessBoard
 	Piece[][] board;
 	PlayerColor nextMove;
 	boolean check;
+	ArrayList<Move> allPossibleMoves;
 
 	public ChessBoard()
 	{
@@ -98,6 +99,7 @@ public class ChessBoard
 			}
 		}
 
+		allPossibleMoves = moves;
 		return moves;
 	}
 
