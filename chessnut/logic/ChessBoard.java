@@ -113,7 +113,7 @@ public class ChessBoard
 
 	public Piece getPiece(Position pos)
 	{
-		return board[pos.rank][pos.file];
+		return board[pos.getRank()][pos.getFile()];
 	}
 
 	@Override
