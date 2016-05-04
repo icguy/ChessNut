@@ -82,12 +82,67 @@ public class ChessBoard
 		board[7][7] = new Rook(PlayerColor.Black);
 	}
 
-	public boolean move(Move move)
+	public boolean makeMove(Move move)
 	{
+		
 		return false;
 		// todo
+		//TODO allPossibleMoves = null; ha változtattunk a board-on, check aktualizálása	
 	}
 
+	public boolean isInCheck()
+	{
+		//TODO
+		return isInCheckInner();
+		//return check;
+	}
+	
+	private boolean isInCheckInner()
+	{
+		Position kingPos = null;
+		
+		//search for king position
+		for (int i = 0; i < 8; i++)
+		{
+			for (int j = 0; j < 8; j++)
+			{
+				Piece curr = board[i][j];
+				if(curr instanceof King && curr.getColor() == nextMove)
+				{
+					kingPos = new Position(i, j);
+					break;
+				}
+			}
+			if(kingPos != null)
+				break;
+		}
+		
+		//iterate over enemy pieces
+		ArrayList<Move> moves = new ArrayList<>();
+		for (int i = 0; i < 8; i++)
+		{
+			for (int j = 0; j < 8; j++)
+			{
+				Piece currPiece = getPiece(i, j);
+				if(currPiece == null)
+					continue;
+				
+				if(currPiece.getColor() != nextMove)
+				{
+					moves.addAll(currPiece.getPossibleMoves(new Position(i, j), this));
+				}
+			}
+		}		
+		
+		//iterate over moves
+		for (Move move : moves) {			
+			if(move.getEnd().equals(kingPos))
+				return true;
+		}
+		
+		return false;
+	}
+	
 	ArrayList<Move> getAllPossibleNextMoves()
 	{
 		if(allPossibleMoves != null)
