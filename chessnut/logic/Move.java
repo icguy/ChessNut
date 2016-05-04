@@ -2,8 +2,8 @@ package chessnut.logic;
 
 public class Move
 {
-	final Position start;
-	final Position end;
+	final private Position start;
+	final private Position end;
 
 	public Move(Position start, Position end)
 	{

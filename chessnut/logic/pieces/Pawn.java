@@ -8,13 +8,6 @@ public class Pawn extends Piece
 	public Pawn(PlayerColor color)
 	{
 		super(color);
-		// TODO Auto-generated constructor stub
-	}
-
-	@Override
-	protected boolean canMoveInner(Move move, ChessBoard board)
-	{
-		return true; //unused
 	}
 
 	@Override
@@ -56,5 +49,4 @@ public class Pawn extends Piece
 				
 		return moves;
 	}
-
 }

@@ -11,13 +11,6 @@ public class Bishop extends Piece
 	}
 
 	@Override
-	protected boolean canMoveInner(Move move, ChessBoard board)
-	{
-		// TODO Auto-generated method stub
-		return false;
-	}
-
-	@Override
 	public String toString()
 	{
 		return color == PlayerColor.White ? "B" : "b";

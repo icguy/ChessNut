@@ -7,7 +7,7 @@ package chessnut.logic;
  */
 public class Position
 {
-	final int rank, file;
+	private final int rank, file;
 
 	public Position(int rank, int file)
 	{

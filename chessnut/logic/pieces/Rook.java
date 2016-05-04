@@ -9,14 +9,6 @@ public class Rook extends Piece
 	public Rook(PlayerColor color)
 	{
 		super(color);
-		// TODO Auto-generated constructor stub
-	}
-
-	@Override
-	protected boolean canMoveInner(Move move, ChessBoard board)
-	{
-		// TODO Auto-generated method stub
-		return false;
 	}
 
 	@Override
