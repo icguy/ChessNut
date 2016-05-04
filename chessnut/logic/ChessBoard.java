@@ -149,4 +149,28 @@ public class ChessBoard
 		sb.append("  a b c d e f g h\n");
 		return sb.toString();
 	}
+	
+	public ChessBoard clone()
+	{
+		ArrayList<Piece> pieces = new ArrayList<>();
+		ArrayList<Position> positions = new ArrayList<>();
+		for (int i = 0; i < 8; i++)
+		{
+			for (int j = 0; j < 8; j++)
+			{
+				Piece piece = board[i][j];
+				if(piece != null)
+				{
+					pieces.add(piece);
+					positions.add(new Position(i, j));
+				}
+			}
+		}
+		
+		return new ChessBoard(
+				positions.toArray(new Position[0]),
+				pieces.toArray(new Piece[0]), 
+				nextMove,
+				check);		
+	}
 }
