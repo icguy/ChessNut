@@ -90,6 +90,9 @@ public class ChessBoard
 
 	ArrayList<Move> getAllPossibleNextMoves()
 	{
+		if(allPossibleMoves != null)
+			return allPossibleMoves;
+		
 		ArrayList<Move> moves = new ArrayList<>();
 		for (int i = 0; i < 8; i++)
 		{
