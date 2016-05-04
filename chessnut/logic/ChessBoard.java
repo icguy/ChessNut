@@ -21,13 +21,15 @@ public class ChessBoard
 		initBoard();
 	}
 
-	public ChessBoard(Position[] pos, Piece[] pieces, PlayerColor nextMove)
+	public ChessBoard(Position[] pos, Piece[] pieces, PlayerColor nextMove, boolean check)
 	{
-		if(pos.length != pieces.length)
-			throw new IllegalArgumentException();
+		assert(pos.length == pieces.length);
+		//if(pos.length != pieces.length)
+		//	throw new IllegalArgumentException();
 		
 		board = new Piece[8][8];
 		this.nextMove = nextMove;		
+		this.check = check;
 
 		for (int i = 0; i < 8; i++)
 		{
@@ -86,14 +88,14 @@ public class ChessBoard
 		// todo
 	}
 
-	ArrayList<Move> getAllPossibleMoves()
+	ArrayList<Move> getAllPossibleNextMoves()
 	{
 		ArrayList<Move> moves = new ArrayList<>();
 		for (int i = 0; i < 8; i++)
 		{
 			for (int j = 0; j < 8; j++)
 			{
-				ArrayList<Move> curr = getMoves(new Position(i, j));
+				ArrayList<Move> curr = getNextMoves(new Position(i, j));
 				if (curr != null)
 					moves.addAll(curr);
 			}
@@ -103,7 +105,7 @@ public class ChessBoard
 		return moves;
 	}
 
-	ArrayList<Move> getMoves(Position position)
+	ArrayList<Move> getNextMoves(Position position)
 	{
 		Piece piece = board[position.getRank()][position.getFile()];
 		if (piece == null || piece.getColor() != nextMove)
@@ -113,9 +115,14 @@ public class ChessBoard
 		return moves; //TODO extra szabályok
 	}
 
+	public Piece getPiece(int rank, int file)
+	{
+		return board[rank][file];
+	}
+	
 	public Piece getPiece(Position pos)
 	{
-		return board[pos.getRank()][pos.getFile()];
+		return getPiece(pos.getRank(),pos.getFile());
 	}
 
 	@Override
