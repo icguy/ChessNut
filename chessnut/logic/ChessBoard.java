@@ -9,10 +9,9 @@ import chessnut.logic.pieces.*;
  */
 public class ChessBoard
 {
-	Piece[][] board;
-	PlayerColor nextMove;
-	boolean check;
-	ArrayList<Move> allPossibleMoves;
+	private Piece[][] board;
+	private PlayerColor nextMove;
+	private ArrayList<Move> allPossibleMoves;
 
 	public ChessBoard()
 	{
@@ -27,7 +26,7 @@ public class ChessBoard
 		this.nextMove = nextMove;
 	}
 
-	ChessBoard(Position[] pos, Piece[] pieces, PlayerColor nextMove, boolean check)
+	ChessBoard(Position[] pos, Piece[] pieces, PlayerColor nextMove)
 	{
 		assert (pos.length == pieces.length);
 		//if(pos.length != pieces.length)
@@ -35,7 +34,6 @@ public class ChessBoard
 
 		board = new Piece[8][8];
 		this.nextMove = nextMove;
-		this.check = check;
 
 		for (int i = 0; i < 8; i++)
 		{
@@ -90,10 +88,20 @@ public class ChessBoard
 
 	public boolean makeMove(Move move)
 	{
+		getAllPossibleNextMoves();
+		if (allPossibleMoves.contains(move))
+		{
+			//TODO check for castling n stuff
+			Position start = move.getStart();
+			Position end = move.getEnd();
+			board[end.getRank()][end.getFile()] = board[start.getRank()][start.getFile()];
+			board[start.getRank()][start.getFile()] = null;
 
+			allPossibleMoves = null;
+			return true;
+		}
 		return false;
 		// todo
-		//TODO allPossibleMoves = null; ha változtattunk a board-on, check aktualizálása	
 	}
 
 	public static Piece[][] cloneTable(Piece[][] table)
@@ -119,9 +127,8 @@ public class ChessBoard
 
 	public boolean isInCheck()
 	{
-		//TODO
+		//TODO kell a check-et cache-elni?
 		return isInCheckInner();
-		//return check;
 	}
 
 	private boolean isInCheckInner()
