@@ -23,11 +23,11 @@ public class ChessBoard
 
 	public ChessBoard(Piece[][] board, PlayerColor nextMove)
 	{
-		this.board = board;
+		this.board = cloneTable(board);
 		this.nextMove = nextMove;
 	}
 
-	public ChessBoard(Position[] pos, Piece[] pieces, PlayerColor nextMove, boolean check)
+	ChessBoard(Position[] pos, Piece[] pieces, PlayerColor nextMove, boolean check)
 	{
 		assert (pos.length == pieces.length);
 		//if(pos.length != pieces.length)
@@ -203,7 +203,7 @@ public class ChessBoard
 
 	public Piece getPiece(int rank, int file)
 	{
-		return board[rank][file];
+		return board[rank][file].clone();
 	}
 
 	public Piece getPiece(Position pos)
@@ -245,22 +245,6 @@ public class ChessBoard
 
 	public ChessBoard clone()
 	{
-		ArrayList<Piece> pieces = new ArrayList<>();
-		ArrayList<Position> positions = new ArrayList<>();
-		for (int i = 0; i < 8; i++)
-		{
-			for (int j = 0; j < 8; j++)
-			{
-				Piece piece = board[i][j];
-				if (piece != null)
-				{
-					pieces.add(piece);
-					positions.add(new Position(i, j));
-				}
-			}
-		}
-
-		return new ChessBoard(positions.toArray(new Position[0]), pieces.toArray(new Piece[0]),
-				nextMove, check);
+		return new ChessBoard(board, nextMove);
 	}
 }
