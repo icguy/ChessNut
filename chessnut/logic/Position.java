@@ -47,6 +47,12 @@ public class Position
 		return other.getFile() == file && other.getRank() == rank;
 	}
 	
+	@Override
+	public int hashCode() 
+	{
+		return file * 10 + rank;		
+	};
+	
 	static public Position tryCreate(int rank, int file)
 	{
 		if(!inRange(rank, file))

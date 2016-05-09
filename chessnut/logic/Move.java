@@ -7,9 +7,9 @@ public class Move
 
 	public Move(Position start, Position end)
 	{
-		if(start == null || end == null)
+		if (start == null || end == null)
 			throw new NullPointerException();
-		
+
 		this.start = start;
 		this.end = end;
 	}
@@ -32,6 +32,12 @@ public class Move
 		Move other = (Move) obj;
 		return start.equals(other.getStart()) && end.equals(other.getEnd());
 	}
+
+	@Override
+	public int hashCode()
+	{
+		return start.hashCode() * 100 + end.hashCode();
+	};
 
 	@Override
 	public String toString()
