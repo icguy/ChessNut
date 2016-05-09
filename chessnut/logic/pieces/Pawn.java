@@ -49,4 +49,10 @@ public class Pawn extends Piece
 				
 		return moves;
 	}
+
+	@Override
+	public Piece clone()
+	{
+		return new Pawn(color);
+	}
 }

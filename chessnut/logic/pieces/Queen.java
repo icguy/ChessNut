@@ -32,4 +32,10 @@ public class Queen extends Piece
 		addMovesInDirection(pos, board, moves, -1, 1); //down-right
 		return moves;
 	}
+
+	@Override
+	public Piece clone()
+	{
+		return new Queen(color);
+	}
 }

@@ -27,4 +27,10 @@ public class Rook extends Piece
 		addMovesInDirection(pos, board, moves, 0, -1); //left
 		return moves;
 	}
+
+	@Override
+	public Piece clone()
+	{
+		return new Rook(color);
+	}
 }

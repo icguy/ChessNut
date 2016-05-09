@@ -17,6 +17,8 @@ public abstract class Piece
 		return color;
 	}
 
+	public abstract Piece clone();
+	
 	public abstract ArrayList<Move> getPossibleMoves(Position pos, ChessBoard board);
 		
 	protected final void addMovesInDirection(Position pos, ChessBoard board,
