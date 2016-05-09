@@ -21,14 +21,20 @@ public class ChessBoard
 		initBoard();
 	}
 
+	public ChessBoard(Piece[][] board, PlayerColor nextMove)
+	{
+		this.board = board;
+		this.nextMove = nextMove;
+	}
+
 	public ChessBoard(Position[] pos, Piece[] pieces, PlayerColor nextMove, boolean check)
 	{
-		assert(pos.length == pieces.length);
+		assert (pos.length == pieces.length);
 		//if(pos.length != pieces.length)
 		//	throw new IllegalArgumentException();
-		
+
 		board = new Piece[8][8];
-		this.nextMove = nextMove;		
+		this.nextMove = nextMove;
 		this.check = check;
 
 		for (int i = 0; i < 8; i++)
@@ -37,7 +43,7 @@ public class ChessBoard
 			{
 				board[i][j] = null;
 			}
-		}		
+		}
 
 		for (int i = 0; i < pos.length; i++)
 		{
@@ -84,10 +90,31 @@ public class ChessBoard
 
 	public boolean makeMove(Move move)
 	{
-		
+
 		return false;
 		// todo
 		//TODO allPossibleMoves = null; ha változtattunk a board-on, check aktualizálása	
+	}
+
+	public static Piece[][] cloneTable(Piece[][] table)
+	{
+		Piece[][] newtable = new Piece[table.length][];
+		for (int i = 0; i < newtable.length; i++)
+		{
+			newtable[i] = new Piece[table[i].length];
+			for (int j = 0; j < newtable[i].length; j++)
+			{
+				if (table[i][j] == null)
+				{
+					newtable[i][j] = null;
+				}
+				else
+				{
+					newtable[i][j] = table[i][j].clone();
+				}
+			}
+		}
+		return newtable;
 	}
 
 	public boolean isInCheck()
@@ -96,27 +123,27 @@ public class ChessBoard
 		return isInCheckInner();
 		//return check;
 	}
-	
+
 	private boolean isInCheckInner()
 	{
 		Position kingPos = null;
-		
+
 		//search for king position
 		for (int i = 0; i < 8; i++)
 		{
 			for (int j = 0; j < 8; j++)
 			{
 				Piece curr = board[i][j];
-				if(curr instanceof King && curr.getColor() == nextMove)
+				if (curr instanceof King && curr.getColor() == nextMove)
 				{
 					kingPos = new Position(i, j);
 					break;
 				}
 			}
-			if(kingPos != null)
+			if (kingPos != null)
 				break;
 		}
-		
+
 		//iterate over enemy pieces
 		ArrayList<Move> moves = new ArrayList<>();
 		for (int i = 0; i < 8; i++)
@@ -124,30 +151,31 @@ public class ChessBoard
 			for (int j = 0; j < 8; j++)
 			{
 				Piece currPiece = getPiece(i, j);
-				if(currPiece == null)
+				if (currPiece == null)
 					continue;
-				
-				if(currPiece.getColor() != nextMove)
+
+				if (currPiece.getColor() != nextMove)
 				{
 					moves.addAll(currPiece.getPossibleMoves(new Position(i, j), this));
 				}
 			}
-		}		
-		
+		}
+
 		//iterate over moves
-		for (Move move : moves) {			
-			if(move.getEnd().equals(kingPos))
+		for (Move move : moves)
+		{
+			if (move.getEnd().equals(kingPos))
 				return true;
 		}
-		
+
 		return false;
 	}
-	
+
 	ArrayList<Move> getAllPossibleNextMoves()
 	{
-		if(allPossibleMoves != null)
+		if (allPossibleMoves != null)
 			return allPossibleMoves;
-		
+
 		ArrayList<Move> moves = new ArrayList<>();
 		for (int i = 0; i < 8; i++)
 		{
@@ -177,10 +205,10 @@ public class ChessBoard
 	{
 		return board[rank][file];
 	}
-	
+
 	public Piece getPiece(Position pos)
 	{
-		return getPiece(pos.getRank(),pos.getFile());
+		return getPiece(pos.getRank(), pos.getFile());
 	}
 
 	@Override
@@ -191,7 +219,7 @@ public class ChessBoard
 		sb.append("  ---------------\n");
 		for (int i = 7; i >= 0; i--)
 		{
-			sb.append(i+1);
+			sb.append(i + 1);
 			sb.append("|");
 			for (int j = 0; j < 8; j++)
 			{
@@ -205,16 +233,16 @@ public class ChessBoard
 				}
 				sb.append(" ");
 			}
-			sb.deleteCharAt(sb.length()-1);
+			sb.deleteCharAt(sb.length() - 1);
 			sb.append("|");
-			sb.append(i+1);
+			sb.append(i + 1);
 			sb.append("\n");
 		}
 		sb.append("  ---------------\n");
 		sb.append("  a b c d e f g h\n");
 		return sb.toString();
 	}
-	
+
 	public ChessBoard clone()
 	{
 		ArrayList<Piece> pieces = new ArrayList<>();
@@ -224,18 +252,15 @@ public class ChessBoard
 			for (int j = 0; j < 8; j++)
 			{
 				Piece piece = board[i][j];
-				if(piece != null)
+				if (piece != null)
 				{
 					pieces.add(piece);
 					positions.add(new Position(i, j));
 				}
 			}
 		}
-		
-		return new ChessBoard(
-				positions.toArray(new Position[0]),
-				pieces.toArray(new Piece[0]), 
-				nextMove,
-				check);		
+
+		return new ChessBoard(positions.toArray(new Position[0]), pieces.toArray(new Piece[0]),
+				nextMove, check);
 	}
 }
