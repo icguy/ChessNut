@@ -12,6 +12,8 @@ public class ChessBoard
 	private Piece[][] board;
 	private PlayerColor nextMove;
 	private ArrayList<Move> allPossibleMoves;
+	private Position blackKingPos;
+	private Position whiteKingPos;
 
 	public ChessBoard()
 	{
@@ -24,6 +26,7 @@ public class ChessBoard
 	{
 		this.board = cloneTable(board);
 		this.nextMove = nextMove;
+		updateKingPos();
 	}
 
 	ChessBoard(Position[] pos, Piece[] pieces, PlayerColor nextMove)
@@ -49,6 +52,8 @@ public class ChessBoard
 			Piece currPiece = pieces[i];
 			board[currPos.getRank()][currPos.getFile()] = currPiece;
 		}
+
+		updateKingPos();
 	}
 
 	void initBoard()
@@ -84,6 +89,8 @@ public class ChessBoard
 		board[7][5] = new Bishop(PlayerColor.Black);
 		board[7][6] = new Knight(PlayerColor.Black);
 		board[7][7] = new Rook(PlayerColor.Black);
+
+		updateKingPos();
 	}
 
 	public boolean makeMove(Move move)
@@ -103,8 +110,14 @@ public class ChessBoard
 			board[end.getRank()][end.getFile()] = board[start.getRank()][start.getFile()];
 			board[start.getRank()][start.getFile()] = null;
 
+			//update hasMoved, kingpos
 			if (moving instanceof King)
 			{
+				if (nextMove == PlayerColor.White)
+					whiteKingPos = end;
+				else
+					blackKingPos = end;
+
 				((King) moving).setHasMoved(true);
 			}
 			else if (moving instanceof Rook)
@@ -148,23 +161,7 @@ public class ChessBoard
 
 	private boolean isInCheckInner()
 	{
-		Position kingPos = null;
-
-		//search for king position
-		for (int i = 0; i < 8; i++)
-		{
-			for (int j = 0; j < 8; j++)
-			{
-				Piece curr = board[i][j];
-				if (curr instanceof King && curr.getColor() == nextMove)
-				{
-					kingPos = new Position(i, j);
-					break;
-				}
-			}
-			if (kingPos != null)
-				break;
-		}
+		Position kingPos = (nextMove == PlayerColor.White) ? whiteKingPos : blackKingPos;
 
 		//iterate over enemy pieces
 		ArrayList<Move> moves = new ArrayList<>();
@@ -191,6 +188,24 @@ public class ChessBoard
 		}
 
 		return false;
+	}
+
+	private void updateKingPos()
+	{
+		for (int i = 0; i < 8; i++)
+		{
+			for (int j = 0; j < 8; j++)
+			{
+				Piece curr = board[i][j];
+				if (curr instanceof King)
+				{
+					if (curr.getColor() == PlayerColor.Black)
+						blackKingPos = new Position(i, j);
+					else
+						whiteKingPos = new Position(i, j);
+				}
+			}
+		}
 	}
 
 	ArrayList<Move> getAllPossibleNextMoves()
@@ -220,7 +235,7 @@ public class ChessBoard
 			return null;
 
 		ArrayList<Move> moves = piece.getPossibleMoves(position, this);
-		return moves; //TODO extra szab·lyok
+		return moves; //TODO extra szab√°lyok
 	}
 
 	private Piece getPieceRef(Position pos)
