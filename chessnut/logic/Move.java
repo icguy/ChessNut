@@ -24,6 +24,12 @@ public class Move
 		return end;
 	}
 
+	public int getDelta()
+	{
+		return Math.abs(start.getRank() - end.getRank())
+				+ Math.abs(start.getFile() - end.getFile());
+	}
+
 	@Override
 	public boolean equals(Object obj)
 	{
