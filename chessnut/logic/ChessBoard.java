@@ -88,20 +88,35 @@ public class ChessBoard
 
 	public boolean makeMove(Move move)
 	{
+		if (getPiece(move.getStart()).getColor() != nextMove)
+			return false;
+
 		getAllPossibleNextMoves();
 		if (allPossibleMoves.contains(move))
 		{
 			//TODO check for castling n stuff
+
+			//move
 			Position start = move.getStart();
 			Position end = move.getEnd();
+			Piece moving = getPieceRef(start);
 			board[end.getRank()][end.getFile()] = board[start.getRank()][start.getFile()];
 			board[start.getRank()][start.getFile()] = null;
 
+			if (moving instanceof King)
+			{
+				((King) moving).setHasMoved(true);
+			}
+			else if (moving instanceof Rook)
+			{
+				((Rook) moving).setHasMoved(true);
+			}
+
+			//clear cache
 			allPossibleMoves = null;
 			return true;
 		}
 		return false;
-		// todo
 	}
 
 	public static Piece[][] cloneTable(Piece[][] table)
@@ -206,6 +221,16 @@ public class ChessBoard
 
 		ArrayList<Move> moves = piece.getPossibleMoves(position, this);
 		return moves; //TODO extra szabályok
+	}
+
+	private Piece getPieceRef(Position pos)
+	{
+		return getPieceRef(pos.getRank(), pos.getFile());
+	}
+
+	private Piece getPieceRef(int rank, int file)
+	{
+		return board[rank][file];
 	}
 
 	public Piece getPiece(int rank, int file)
