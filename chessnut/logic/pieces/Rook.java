@@ -5,10 +5,12 @@ import chessnut.logic.*;
 
 public class Rook extends Piece
 {
+	private boolean hasMoved;
 
 	public Rook(PlayerColor color)
 	{
 		super(color);
+		setHasMoved(false);
 	}
 
 	@Override
@@ -32,5 +34,15 @@ public class Rook extends Piece
 	public Piece clone()
 	{
 		return new Rook(color);
+	}
+
+	public boolean getHasMoved()
+	{
+		return hasMoved;		
+	}
+
+	public void setHasMoved(boolean haveMoved)
+	{
+		this.hasMoved = haveMoved;
 	}
 }
