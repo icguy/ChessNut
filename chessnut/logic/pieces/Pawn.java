@@ -25,25 +25,25 @@ public class Pawn extends Piece
 		int rank = pos.getRank();
 		int file = pos.getFile();
 
-		Position currPos = new Position(rank + pawnDir, file);
-		Piece currPiece = board.getPiece(currPos);
+		Position currPos = Position.tryCreate(rank + pawnDir, file);
+		Piece currPiece = currPos != null ? board.getPiece(currPos) : null;
 		if (currPiece == null)
 		{
 			moves.add(new Move(pos, currPos));	//step 1 forward
 
-			currPos = new Position(rank + 2 * pawnDir, file);
-			currPiece = board.getPiece(currPos);
+			currPos = Position.tryCreate(rank + 2 * pawnDir, file);
+			currPiece = currPos != null ? board.getPiece(currPos) : null;
 			if (pos.getRank() == initRank && currPiece == null)
 				moves.add(new Move(pos, currPos)); //initial step 2 forward
 		}
 
-		currPos = new Position(rank + pawnDir, file + 1);
-		currPiece = board.getPiece(currPos);
+		currPos = Position.tryCreate(rank + pawnDir, file + 1);
+		currPiece = currPos != null ? board.getPiece(currPos) : null;
 		if(currPiece != null && currPiece.color != color)
 			moves.add(new Move(pos, currPos));	//capture piece
 		
-		currPos = new Position(rank + pawnDir, file - 1);
-		currPiece = board.getPiece(currPos);
+		currPos = Position.tryCreate(rank + pawnDir, file - 1);
+		currPiece = currPos != null ? board.getPiece(currPos) : null;
 		if(currPiece != null && currPiece.color != color)
 			moves.add(new Move(pos, currPos));	//capture piece
 				
