@@ -1,3 +1,9 @@
+/*************************************************
+ *  \file     ILogic.java
+ *  \brief    Interfész felfelé, a játéklogika irányába
+ *  \note     
+ *  \date     2016. máj. 11.
+ *************************************************/
 package chessnut;
 
 import chessnut.logic.*;
@@ -5,6 +11,6 @@ import chessnut.logic.pieces.Piece;
 
 public interface ILogic
 {
-	void click(Position position);
-	void Promote(Piece piece);
+	void click(Position position);  //!<  Player/AI általi kattintás ezen jut fel a logikához
+	void promote(Piece piece);      //!<  Player/AI általi gyalogváltás ezen jut fel a logikához
 }

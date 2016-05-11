@@ -1,5 +1,13 @@
+/*************************************************
+ *  \file     Network.java
+ *  \brief    Chessnut network kezelés absztrakciója
+ *  \note     NetworkServer és NetWorkClient származtatja le.
+ *  \date     2016. máj. 11.
+ *************************************************/
 package chessnut.network;
 
-public abstract class Network {
-// TODO Ez most kommit teszt Balázs részérõl
+public abstract class Network
+{
+	abstract void connect(String ipAddr);   //!< Kapcsolódás
+	abstract void disconnect();             //!< Kapcsolat bontás
 }
