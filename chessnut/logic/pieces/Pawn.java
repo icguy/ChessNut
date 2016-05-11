@@ -7,7 +7,6 @@ public class Pawn extends Piece
 {
 	public Pawn(PlayerColor color)
 	{
-		//teszt
 		super(color);
 	}
 
