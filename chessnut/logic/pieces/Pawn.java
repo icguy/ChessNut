@@ -29,7 +29,7 @@ public class Pawn extends Piece
 		Piece currPiece = currPos != null ? board.getPiece(currPos) : null;
 		if (currPiece == null)
 		{
-			moves.add(new Move(pos, currPos));	//step 1 forward
+			moves.add(new Move(pos, currPos)); //step 1 forward
 
 			currPos = Position.tryCreate(rank + 2 * pawnDir, file);
 			currPiece = currPos != null ? board.getPiece(currPos) : null;
@@ -39,14 +39,14 @@ public class Pawn extends Piece
 
 		currPos = Position.tryCreate(rank + pawnDir, file + 1);
 		currPiece = currPos != null ? board.getPiece(currPos) : null;
-		if(currPiece != null && currPiece.color != color)
-			moves.add(new Move(pos, currPos));	//capture piece
-		
+		if (currPiece != null && currPiece.color != color)
+			moves.add(new Move(pos, currPos)); //capture piece
+
 		currPos = Position.tryCreate(rank + pawnDir, file - 1);
 		currPiece = currPos != null ? board.getPiece(currPos) : null;
-		if(currPiece != null && currPiece.color != color)
-			moves.add(new Move(pos, currPos));	//capture piece
-				
+		if (currPiece != null && currPiece.color != color)
+			moves.add(new Move(pos, currPos)); //capture piece
+
 		return moves;
 	}
 
