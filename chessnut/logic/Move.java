@@ -14,6 +14,11 @@ public class Move
 		this.end = end;
 	}
 
+	public Move(int startRank, int startFile, int endRank, int endFile)
+	{
+		this(new Position(startRank, startFile), new Position(endRank, endFile));
+	}
+
 	public Position getStart()
 	{
 		return start;
