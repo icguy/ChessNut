@@ -10,7 +10,7 @@ public class King extends Piece
 	public King(PlayerColor color)
 	{
 		super(color);
-		setHasMoved(false);
+		setMoved(false);
 	}
 
 	@Override
@@ -46,12 +46,12 @@ public class King extends Piece
 		return new King(color);
 	}
 
-	public boolean getHasMoved()
+	public boolean hasMoved()
 	{
 		return hasMoved;
 	}
 
-	public void setHasMoved(boolean hasMoved)
+	public void setMoved(boolean hasMoved)
 	{
 		this.hasMoved = hasMoved;
 	}

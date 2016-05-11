@@ -10,7 +10,7 @@ public class Rook extends Piece
 	public Rook(PlayerColor color)
 	{
 		super(color);
-		setHasMoved(false);
+		setMoved(false);
 	}
 
 	@Override
@@ -36,12 +36,12 @@ public class Rook extends Piece
 		return new Rook(color);
 	}
 
-	public boolean getHasMoved()
+	public boolean hasMoved()
 	{
 		return hasMoved;
 	}
 
-	public void setHasMoved(boolean hasMoved)
+	public void setMoved(boolean hasMoved)
 	{
 		this.hasMoved = hasMoved;
 	}
