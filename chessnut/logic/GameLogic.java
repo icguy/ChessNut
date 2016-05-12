@@ -7,19 +7,30 @@
 package chessnut.logic;
 
 import chessnut.ILogic;
+import chessnut.IPlayer;
 import chessnut.logic.Position;
 import chessnut.logic.pieces.Piece;
 
 public class GameLogic implements ILogic
 {
-	// TODO itt sokminden todo van. Igazából csak azért hoztam ezt létre, hogy a neve létezzen, hogy a hálózatba tudjak tovább haladni vele.
-	// És ezt a két üres függvényvázat is létrehoztam, hogy a fordító ne rinyáljon
+	// Játék elemei
+	ChessBoard chessboard;     //!< Sakktáblám
+	IPlayer gui;               //!< Egyik játékos a helyi GUI
+	IPlayer opponent;          //!< Másik játékos: AI / Network
+	
+	
+	//! \brief  Ezzel lehet beállítani a túloldali játékosra vonatkozó referenciát (AI / NetworkServer)
+	@Override
+	public void setPlayer(IPlayer player)
+	{
+		this.opponent = player;
+	}
 	
 	//! \brief  Click kezelése
 	@Override
 	public void click(Position position)
 	{
-		// TODO Auto-generated method stub
+		// TODO Klikk kezelése
 		
 	}
 	
@@ -27,7 +38,7 @@ public class GameLogic implements ILogic
 	@Override
 	public void promote(Piece piece)
 	{
-		// TODO Auto-generated method stub
+		// TODO Beérkezõ promóció kezelése
 		
 	}
 }

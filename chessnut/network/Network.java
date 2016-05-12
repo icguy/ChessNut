@@ -8,6 +8,7 @@ package chessnut.network;
 
 public abstract class Network
 {
+	// Kapcsolat
 	abstract void connect(String ipAddr);   //!< Kapcsolódás
 	abstract void disconnect();             //!< Kapcsolat bontás
 }
