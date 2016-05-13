@@ -13,33 +13,46 @@ import chessnut.network.*;
 
 public class NetworkTestClient extends NetworkTest
 {
+	ILogic client;
+	
+	// Teszt futtató thread
+	private class ClientTestRunnable implements Runnable
+	{
+		@Override
+		public void run()
+		{
+			// Várok, amíg a kapcsolat biztosan felépül
+			while( !((NetworkClient)client).isConnected() )
+			{
+				waitSec(1);
+			}
+			
+			// Létrehozom a küldeni való objektumokat
+			Piece toPromote = new King(PlayerColor.Black);
+			Position pos = new Position(5, 7);
+			
+			while( true )
+			{
+				// Click-et küldök
+				waitSec(3);
+				client.click(pos);
+				
+				// Promote-ot küldök
+				waitSec(1);
+				client.promote(toPromote);
+			}
+		}
+	}
+	
 	// ! \brief Teszt indítása
 	@Override
 	public void start()
 	{
-		// Létrehozom a klienst
-		ILogic client = new NetworkClient();
-		((NetworkClient) client).connect("localhost");
-
-		// Várok, amíg a kapcsolat biztosan felépül
-		while( !((NetworkClient)client).isConnected() )
-		{
-			waitSec(1);
-		}
+		// Beállítom kliensnek a main kliensoldali hálózatát, mert azt tesztelem
+		client = Main.Logic;
 		
-		// Létrehozom a küldeni való objektumokat
-		Piece toPromote = new King(PlayerColor.Black);
-		Position pos = new Position(5, 7);
-		
-		while( true )
-		{
-			// Click-et küldök
-			waitSec(3);
-			client.click(pos);
-			
-			// Promote-ot küldök
-			waitSec(1);
-			client.promote(toPromote);
-		}
+		// Teszt futtatása külön thread-ben
+		Thread testClientThread = new Thread(new ClientTestRunnable());
+		testClientThread.start();
 	}
 }

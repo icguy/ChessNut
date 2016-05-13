@@ -13,35 +13,50 @@ import chessnut.network.*;
 
 public class NetworkTestServer extends NetworkTest
 {
+	IPlayer server;
+	
+	// Teszt futtató thread osztálya
+	private class ServerTestRunnable implements Runnable
+	{
+		@Override
+		public void run()
+		{
+			// Létrehozom a tesztobjektumokat
+			ChessBoard cb = new ChessBoard(); // Teljesen felinicializált
+												// sakktábla jön létre elvileg
+			Position pos = new Position(3, 2);
+
+			// Várok, amíg a kapcsolat felépül
+			while (!((NetworkServer) server).isConnected())
+			{
+				waitSec(1);
+			}
+
+			// Küldés végtelenül
+			while (true)
+			{
+				waitSec(2);
+
+				// Küldök sakktáblát
+				server.setChessboard(cb);
+
+				waitSec(4);
+
+				// Küldök gyalogváltást
+				server.notifyPromotion(pos);
+			}
+		}
+	}
+	
 	//! \brief  Teszt indítása
 	@Override
 	public void start()
 	{
-		// Létrehozom a szervert
-		IPlayer server = new NetworkServer();
-		((NetworkServer) server).connect("localhost");
+		// Beállítom tesztelendõ szervernek a Main szerverét
+		server = Main.Opponent;   // Nem szép, de kell, hogy bele tudjak tesztelni a fõprogramba
 		
-		// Létrehozom a tesztobjektumokat
-		ChessBoard cb = new ChessBoard(); // Teljesen felinicializált sakktábla jön létre elvileg
-		Position pos = new Position(3, 2);
-		
-		// Várok, amíg a kapcsolat felépül
-		while( !((NetworkServer) server).isConnected() )
-		{
-			waitSec(1);
-		}
-		
-		while (true)
-		{
-			waitSec(2);
-			
-			// Küldök sakktáblát
-			server.setChessboard(cb);
-			
-			waitSec(4);
-			
-			// Küldök gyalogváltást
-			server.notifyPromotion(pos);
-		}
+		// Külön thread-ben fut a teszt
+		Thread testServerThread = new Thread(new ServerTestRunnable());
+		testServerThread.start();
 	}
 }

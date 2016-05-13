@@ -104,6 +104,7 @@ public class NetworkClient extends Network implements ILogic
 			{
 				System.out.println(ex.getMessage());
 				System.err.println("Server disconnected!");
+				System.exit(0);
 			} finally
 			{
 				disconnect();
@@ -118,6 +119,9 @@ public class NetworkClient extends Network implements ILogic
 		disconnect();
 		try
 		{
+			// Szöveg
+			System.out.println("Starting client.... ");
+			
 			// Socket létrehozása
 			socket = new Socket(ip, port);
 

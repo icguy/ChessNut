@@ -10,6 +10,7 @@ package chessnut.network;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
+import java.net.InetAddress;
 import java.net.ServerSocket;
 import java.net.Socket;
 
@@ -138,6 +139,7 @@ public class NetworkServer extends Network implements IPlayer
 			{
 				System.out.println(ex.getMessage());
 				System.err.println("Client disconnected!");
+				System.exit(0);
 			} finally
 			{
 				// Ha véletlenül kiugrunk ebbõl, akkor bontás
@@ -154,6 +156,10 @@ public class NetworkServer extends Network implements IPlayer
 		disconnect();
 		try
 		{
+			// Kiírom az IP-met szövegbe
+			String IPAddr = InetAddress.getLocalHost().getHostAddress();
+			System.out.println("Starting server on local IP: " + IPAddr );
+			
 			// Server socket létrehozás
 			serverSocket = new ServerSocket(port);
 			// Fogadó thread létrehozás és indítás
