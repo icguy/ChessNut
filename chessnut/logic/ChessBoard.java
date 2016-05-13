@@ -226,7 +226,8 @@ public class ChessBoard implements Serializable
 
 	public Object TestMethod(Object obj)
 	{
-		return moveEndsUpInCheck((Move) obj);
+		return getPossibleNextCastlingMoves();
+		//return moveEndsUpInCheck((Move) obj);
 	}
 
 	// @formatter:off
@@ -268,17 +269,10 @@ public class ChessBoard implements Serializable
 			//TODO refactor
 			if (!piecesInbetween)
 			{
-				Piece[][] newboard1 = cloneTable(board);
-				newboard1[homeRank][3] = newboard1[homeRank][4];
-				newboard1[homeRank][4] = null;
-				ChessBoard newcb1 = new ChessBoard(newboard1, nextMove);
+				boolean move1 = moveEndsUpInCheck(new Move(homeRank, 4, homeRank, 3));
+				boolean move2 = moveEndsUpInCheck(new Move(homeRank, 4, homeRank, 2));
 				
-				Piece[][] newboard2 = cloneTable(board);
-				newboard2[homeRank][2] = newboard2[homeRank][4];
-				newboard2[homeRank][4] = null;
-				ChessBoard newcb2 = new ChessBoard(newboard2, nextMove);
-				
-				if(!newcb1.isInCheck() && !newcb2.isInCheck())
+				if(!move1 && ! move2)
 					possibleCastlings.add(new Move(homeRank, 4, homeRank, 2));
 			}
 		}
@@ -292,17 +286,10 @@ public class ChessBoard implements Serializable
 
 			if (!piecesInbetween)
 			{
-				Piece[][] newboard1 = cloneTable(board);
-				newboard1[homeRank][5] = newboard1[homeRank][4];
-				newboard1[homeRank][4] = null;
-				ChessBoard newcb1 = new ChessBoard(newboard1, nextMove);
+				boolean move1 = moveEndsUpInCheck(new Move(homeRank, 4, homeRank, 5));
+				boolean move2 = moveEndsUpInCheck(new Move(homeRank, 4, homeRank, 6));
 				
-				Piece[][] newboard2 = cloneTable(board);
-				newboard2[homeRank][6] = newboard2[homeRank][4];
-				newboard2[homeRank][4] = null;
-				ChessBoard newcb2 = new ChessBoard(newboard2, nextMove);
-				
-				if(!newcb1.isInCheck() && !newcb2.isInCheck())
+				if(!move1 && ! move2)
 					possibleCastlings.add(new Move(homeRank, 4, homeRank, 6));
 			}
 		}
