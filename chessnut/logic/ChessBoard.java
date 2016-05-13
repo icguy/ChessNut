@@ -10,8 +10,8 @@ import chessnut.logic.pieces.*;
  */
 public class ChessBoard implements Serializable
 {
-	private static final long serialVersionUID = 1532472295622732188L;  //!< Egyedi magicnumber a sorositashoz
-	
+	private static final long serialVersionUID = 1532472295622732188L; //!< Egyedi magicnumber a sorositashoz
+
 	private Piece[][] board;
 	private PlayerColor nextMove;
 	private ArrayList<Move> allPossibleMoves;
@@ -103,7 +103,7 @@ public class ChessBoard implements Serializable
 		Position start = move.getStart();
 		Position end = move.getEnd();
 		Piece moving = getPieceRef(start);
-		
+
 		if (moving == null || moving.getColor() != nextMove)
 			return false;
 
@@ -224,11 +224,11 @@ public class ChessBoard implements Serializable
 		}
 	}
 
-	public Object TestMethod()
+	public Object TestMethod(Object obj)
 	{
-		return getPossibleNextCastlingMoves();
+		return moveEndsUpInCheck((Move) obj);
 	}
-	
+
 	// @formatter:off
 	private ArrayList<Move> getPossibleNextCastlingMoves()
 	{
@@ -313,38 +313,35 @@ public class ChessBoard implements Serializable
 
 	private boolean moveEndsUpInCheck(Move move)
 	{
-		ChessBoard temp = new ChessBoard(board, nextMove);
-		boolean success = temp.makeMove(move);
-		if(!success)
-			return false;
-		ChessBoard temp2 = new ChessBoard(temp.getBoard(), nextMove);
-		return temp2.isInCheck();
+		Position start = move.getStart();
+		Position end = move.getEnd();
+		Piece[][] newBoard = cloneTable(board);
+		newBoard[end.getRank()][end.getFile()] = newBoard[start.getRank()][start.getFile()];
+		newBoard[start.getRank()][start.getFile()] = null;
+		ChessBoard newChessBoard = new ChessBoard(newBoard, nextMove);
+		return newChessBoard.isInCheck();
 	}
-	
+
 	private ArrayList<Move> getAllPossibleNextMoves()
 	{
 		if (allPossibleMoves != null)
 			return allPossibleMoves;
 
-		//check for moving into check
-		
 		ArrayList<Move> moves = new ArrayList<>();
 		for (int i = 0; i < 8; i++)
 		{
 			for (int j = 0; j < 8; j++)
 			{
 				ArrayList<Move> currList = getNextMoves(new Position(i, j));
-				if (currList != null)
+
+				for (Move move : currList)
 				{
-					for (Move move : currList)
-					{					
-						if(!moveEndsUpInCheck(move))
-							moves.add(move);
-					}
+					if (!moveEndsUpInCheck(move))
+						moves.add(move);
 				}
 			}
 		}
-		
+
 		moves.addAll(getPossibleNextCastlingMoves());
 
 		allPossibleMoves = moves;
@@ -355,10 +352,10 @@ public class ChessBoard implements Serializable
 	{
 		Piece piece = getPieceRef(position);
 		if (piece == null || piece.getColor() != nextMove)
-			return null;
+			return new ArrayList<>();
 
 		ArrayList<Move> moves = piece.getPossibleMoves(position, this);
-		return moves; //TODO extra szabályok
+		return moves;
 	}
 
 	private Piece getPieceRef(Position pos)
@@ -375,7 +372,7 @@ public class ChessBoard implements Serializable
 	{
 		return cloneTable(board);
 	}
-	
+
 	public Piece getPiece(int rank, int file)
 	{
 		if (board[rank][file] == null)
@@ -417,8 +414,8 @@ public class ChessBoard implements Serializable
 		}
 		sb.append("  ---------------\n");
 		sb.append("  a b c d e f g h\n");
-		sb.append( nextMove == PlayerColor.White ? "white" : "black");
-		sb.append( " to move\n");
+		sb.append(nextMove == PlayerColor.White ? "white" : "black");
+		sb.append(" to move\n");
 		return sb.toString();
 	}
 
