@@ -26,6 +26,9 @@ public class NetworkServer extends Network implements IPlayer
 	// Konstansok
 	private static final int port = 10007;     //!< Port
 	
+	// Él-e a kapcsolat
+	private boolean Connected = false;            //!< Él-e a kapcsolat
+	
 	// Kapcsolódás a játék többi eleméhez
 	private ILogic gameLogic;                  //!< Ezen érjük el a GameLogic-ot
 	
@@ -51,6 +54,13 @@ public class NetworkServer extends Network implements IPlayer
 	}
 		
 	
+	//! \brief  Kapcsolat állapotát le lehet kérni
+	public boolean isConnected()
+	{
+		return Connected;
+	}
+	
+	
 	// ! \brief Fogadó thread
 	private class PlayerActionReceiver implements Runnable
 	{
@@ -61,6 +71,8 @@ public class NetworkServer extends Network implements IPlayer
 				System.out.println("Waiting for Client");
 				// Kliensre várakozás (blokkol)
 				clientSocket = serverSocket.accept();
+				// Kapcsolat létrejött:
+				Connected = true;
 				System.out.println("Client connected.");
 			} catch (IOException e)
 			{
@@ -105,7 +117,7 @@ public class NetworkServer extends Network implements IPlayer
 	
 	//! \brief  Kapcsolódás klienshez
 	@Override
-	void connect(String ipAddr)
+	public void connect(String ipAddr)
 	{
 		disconnect();
 		try
@@ -151,7 +163,6 @@ public class NetworkServer extends Network implements IPlayer
 			System.out.println("Could not send: output stream is not open.");
 			return;
 		}
-		System.out.println("Sending to client: " + msgToClient );
 		// Küldés
 		try
 		{
@@ -159,7 +170,7 @@ public class NetworkServer extends Network implements IPlayer
 			out.flush();
 		} catch (IOException ex)
 		{
-			System.err.println("Error while sending message to client.");
+			System.err.println("Error while sending message to client: " + ex.getMessage());
 		}
 	}
 	
@@ -169,6 +180,7 @@ public class NetworkServer extends Network implements IPlayer
 	public void setChessboard(ChessBoard chessboard)
 	{
 		IPlayerMsg msg = new IPlayerMsg_setChessboard(chessboard);
+		System.out.println("Sending setChessboard: \n" + ((IPlayerMsg_setChessboard) msg).chessboard);
 		sendMsgToClient(msg);
 	}
 	
@@ -177,6 +189,7 @@ public class NetworkServer extends Network implements IPlayer
 	public void notifyPromotion(Position position)
 	{
 		IPlayerMsg msg = new IPlayerMsg_notifyPromotion(position);
+		System.out.println("Sending notifyPromotion: \n" + ((IPlayerMsg_notifyPromotion) msg).position);
 		sendMsgToClient(msg);
 	}
 	

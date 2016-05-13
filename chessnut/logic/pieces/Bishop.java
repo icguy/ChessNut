@@ -5,6 +5,8 @@ import chessnut.logic.*;
 
 public class Bishop extends Piece
 {
+	private static final long serialVersionUID = 2758435245622732188L;  //!< Egyedi magicnumber a sorosításhoz
+	
 	public Bishop(PlayerColor color)
 	{
 		super(color);

@@ -6,6 +6,8 @@
  *************************************************/
 package chessnut;
 
+import java.io.Serializable;
+
 import chessnut.logic.*;
 
 public interface IPlayer
@@ -19,12 +21,17 @@ public interface IPlayer
 	/* A többi csak a Network-re tartozik: */
 	
 	//! \brief  TCP fölötti IPlayer üzenet definíciója
-	public abstract class IPlayerMsg{}
+	public class IPlayerMsg implements Serializable
+	{
+		// Üzenet tartalma
+		private static final long serialVersionUID = 7526472295622776147L;  //!< Egyedi magicnumber a sorosításhoz
+	}
 	
 	//! \brief  Ilyen üzenetben megy át a sakktábla
 	public class IPlayerMsg_setChessboard extends IPlayerMsg
 	{
-		ChessBoard chessboard;     //!< Küldött sakktábla
+		private static final long serialVersionUID = 7526472295622776148L;  //!< Egyedi magicnumber a sorosításhoz
+		public ChessBoard chessboard;     //!< Küldött sakktábla
 		
 		//! \brief  Üzenet létrehozó konstruktor
 		public IPlayerMsg_setChessboard(ChessBoard chessboard)
@@ -36,7 +43,8 @@ public interface IPlayer
 	//! \brief  Ilyen üzenetben megy át a promotion-re kiválasztott mezõ
 	public class IPlayerMsg_notifyPromotion extends IPlayerMsg
 	{
-		Position position;         //!< Küldött pozíció a promotion-höz
+		private static final long serialVersionUID = 7526472295622776149L;  //!< Egyedi magicnumber a sorosításhoz
+		public Position position;         //!< Küldött pozíció a promotion-höz
 
 		// ! \brief Üzenet létrehozó konstruktor
 		public IPlayerMsg_notifyPromotion(Position position)

@@ -1,12 +1,16 @@
 package chessnut.logic;
 
+import java.io.Serializable;
+
 /*
  * Represents a position on the board
  * Ranks (rows) are represented 0 through 7, and marked 1 through 8 on a physical board.
  * Files (columns) are represented 0 through 7, and marked 'a' through 'h' on a physical board.
  */
-public class Position
+public class Position implements Serializable
 {
+	private static final long serialVersionUID = 2758435244468732197L;  //!< Egyedi magicnumber a sorosításhoz
+	
 	private final int rank, file;
 
 	public Position(int rank, int file)

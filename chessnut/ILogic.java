@@ -25,7 +25,7 @@ public interface ILogic
 	//! \brief  Ilyen üzenetben megy át a kattintás
 	public class ILogicMsg_click extends ILogicMsg
 	{
-		Position position;      //!< Klikkelt pozíció
+		public Position position;      //!< Klikkelt pozíció
 		
 		//! \brief  Üzenet létrehozó konstruktor
 		public ILogicMsg_click(Position position)
@@ -37,7 +37,7 @@ public interface ILogic
 	// ! \brief Ilyen üzenetben megy át a kattintás
 	public class ILogicMsg_promote extends ILogicMsg
 	{
-		Piece piece;            //!< Elõléptetendõ bábu
+		public Piece piece;            //!< Elõléptetendõ bábu
 
 		// ! \brief Üzenet létrehozó konstruktor
 		public ILogicMsg_promote(Piece piece)

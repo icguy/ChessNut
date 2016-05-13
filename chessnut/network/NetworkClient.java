@@ -14,7 +14,9 @@ import java.net.*;
 
 //Projekt specifikus importok
 import chessnut.ILogic;
+import chessnut.ILogic.*;
 import chessnut.IPlayer;
+import chessnut.IPlayer.*;
 import chessnut.logic.Position;
 import chessnut.logic.pieces.Piece;
 
@@ -56,8 +58,26 @@ public class NetworkClient extends Network implements ILogic
 			{
 				while (true)
 				{
-					//Point received = (Point) in.readObject(); TODO fogadás
-					//ctrl.clickReceived(received);             TODO fogadott feldolgozása
+					// Objektum beérkezése
+					IPlayerMsg received = (IPlayerMsg) in.readObject();
+					
+					// Ha setChessboard üzenet jött
+					if(received instanceof IPlayerMsg_setChessboard )  //.msgType == IPlayerMsgType.setChessboard)
+					{
+						System.out.println("setChessboard message arrived: \n" + ((IPlayerMsg_setChessboard)received).chessboard );
+						// TODO meghívni a rendes kezelõt, ha lesz mire
+					}
+					// Ha notifyPromotion jött
+					else if(received instanceof IPlayerMsg_notifyPromotion)
+					{
+						System.out.println("notifyPromotion message arrived: \n" + ((IPlayerMsg_notifyPromotion)received).position );
+						// TODO meghívni a rendes kezelõt, ha lesz mire
+					}
+					// Ha nem tudom mi jött
+					else
+					{
+						System.err.println("Nem tudom milyen objektum jött be: \n" + received);
+					}
 				}
 			} catch (Exception ex)
 			{
@@ -72,7 +92,7 @@ public class NetworkClient extends Network implements ILogic
 	
 	//! \brief  Kapcsolódás szerverhez
 	@Override
-	void connect(String ip)
+	public void connect(String ip)
 	{
 		disconnect();
 		try
@@ -125,7 +145,6 @@ public class NetworkClient extends Network implements ILogic
 			System.out.println("Could not send: output stream is not open.");
 			return;
 		}
-		System.out.println("Sending to server: " + msgToServer);
 		// Küldés
 		try
 		{

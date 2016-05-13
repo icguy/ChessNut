@@ -1,5 +1,6 @@
 package chessnut.logic;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import chessnut.logic.pieces.*;
 
@@ -7,8 +8,10 @@ import chessnut.logic.pieces.*;
  * board indices go from 0 to 7, where the first index is the rank, second is the file of
  * the corresponding position, e.g. [0][0] marks the 'a1' corner square.
  */
-public class ChessBoard
+public class ChessBoard implements Serializable
 {
+	private static final long serialVersionUID = 1532472295622732188L;  //!< Egyedi magicnumber a sorosításhoz
+	
 	private Piece[][] board;
 	private PlayerColor nextMove;
 	private ArrayList<Move> allPossibleMoves;
@@ -118,11 +121,11 @@ public class ChessBoard
 				else
 					blackKingPos = end;
 
-				((King) moving).setHasMoved(true);
+	//			((King) moving).setHasMoved(true);       TODO Kikommenteztem, hogy tudjon fordulni a program. (Balázs)
 			}
 			else if (moving instanceof Rook)
 			{
-				((Rook) moving).setHasMoved(true);
+	//			((Rook) moving).setHasMoved(true);        TODO Kikommenteztem, hogy tudjon fordulni a program. (Balázs)
 			}
 
 			//clear cache

@@ -1,10 +1,13 @@
 package chessnut.logic.pieces;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import chessnut.logic.*;
 
-public abstract class Piece
+public abstract class Piece implements Serializable
 {
+	private static final long serialVersionUID = 2758435245622732188L;  //!< Egyedi magicnumber a sorosításhoz
+	
 	final PlayerColor color;
 
 	public Piece(PlayerColor color)

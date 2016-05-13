@@ -5,6 +5,8 @@ import chessnut.logic.*;
 
 public class King extends Piece
 {
+	private static final long serialVersionUID = 2758435245622732188L;  //!< Egyedi magicnumber a sorosításhoz
+	
 	private boolean hasMoved;
 
 	public King(PlayerColor color)
