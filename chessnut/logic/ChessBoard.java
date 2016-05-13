@@ -10,7 +10,7 @@ import chessnut.logic.pieces.*;
  */
 public class ChessBoard implements Serializable
 {
-	private static final long serialVersionUID = 1532472295622732188L;  //!< Egyedi magicnumber a soros�t�shoz
+	private static final long serialVersionUID = 1532472295622732188L;  //!< Egyedi magicnumber a sorositashoz
 	
 	private Piece[][] board;
 	private PlayerColor nextMove;
@@ -96,9 +96,15 @@ public class ChessBoard implements Serializable
 		updateKingPos();
 	}
 
+	//TODO pawn promotion
+
 	public boolean makeMove(Move move)
 	{
-		if (getPiece(move.getStart()).getColor() != nextMove)
+		Position start = move.getStart();
+		Position end = move.getEnd();
+		Piece moving = getPieceRef(start);
+		
+		if (moving == null || moving.getColor() != nextMove)
 			return false;
 
 		getAllPossibleNextMoves();
@@ -106,10 +112,16 @@ public class ChessBoard implements Serializable
 		{
 			//TODO check for castling n stuff
 
+			if (moving instanceof King && move.getDelta() == 2)
+			{
+				//castling
+
+				//				int homeRank = nextMove == PlayerColor.White ? 0 : 7;
+				//				if(start.getRank() != homeRank)
+				//					return false;
+			}
+
 			//move
-			Position start = move.getStart();
-			Position end = move.getEnd();
-			Piece moving = getPieceRef(start);
 			board[end.getRank()][end.getFile()] = board[start.getRank()][start.getFile()];
 			board[start.getRank()][start.getFile()] = null;
 
@@ -130,6 +142,7 @@ public class ChessBoard implements Serializable
 
 			//clear cache
 			allPossibleMoves = null;
+			nextMove = (nextMove == PlayerColor.White) ? PlayerColor.Black : PlayerColor.White;
 			return true;
 		}
 		return false;
@@ -211,10 +224,99 @@ public class ChessBoard implements Serializable
 		}
 	}
 
+	public Object TestMethod()
+	{
+		return getPossibleNextCastlingMoves();
+	}
+	
+	// @formatter:off
+	private ArrayList<Move> getPossibleNextCastlingMoves()
+	{
+		//The king and the chosen rook are on the player's first rank.	OK
+		//Neither the king nor the chosen rook has previously moved.  	OK
+		//There are no pieces between the king and the chosen rook.   	OK
+		//The king is not currently in check.							OK
+		//The king does not pass through a square that is attacked by an enemy piece.
+		//The king does not end up in check. (True of any legal move.)
+		
+		ArrayList<Move> possibleCastlings = new ArrayList<>();
+		int homeRank = nextMove == PlayerColor.White ? 0 : 7;
+		Position kingPos = (nextMove == PlayerColor.White) ? whiteKingPos : blackKingPos;
+		King king = (King) getPieceRef(kingPos);
+
+		Rook leftRook, rightRook;
+		Piece leftPiece, rightPiece;
+		leftPiece = getPieceRef(new Position(homeRank, 0));
+		rightPiece = getPieceRef(new Position(homeRank, 7));
+		leftRook = (leftPiece instanceof Rook) ? (Rook) leftPiece : null;
+		rightRook = (rightPiece instanceof Rook) ? (Rook) rightPiece : null;
+
+		if (king.hasMoved())
+			return possibleCastlings;
+		if (isInCheck())
+			return possibleCastlings;
+
+		//TODO
+		//castling left
+		if (leftRook != null && !leftRook.hasMoved())
+		{
+			boolean piecesInbetween = 
+					getPieceRef(homeRank, 1) != null ||
+					getPieceRef(homeRank, 2) != null ||
+					getPieceRef(homeRank, 3) != null;
+
+			if (!piecesInbetween)
+			{
+				Piece[][] newboard1 = cloneTable(board);
+				newboard1[homeRank][3] = newboard1[homeRank][4];
+				newboard1[homeRank][4] = null;
+				ChessBoard newcb1 = new ChessBoard(newboard1, nextMove);
+				
+				Piece[][] newboard2 = cloneTable(board);
+				newboard2[homeRank][2] = newboard2[homeRank][4];
+				newboard2[homeRank][4] = null;
+				ChessBoard newcb2 = new ChessBoard(newboard2, nextMove);
+				
+				if(!newcb1.isInCheck() && !newcb2.isInCheck())
+					possibleCastlings.add(new Move(homeRank, 4, homeRank, 2));
+			}
+		}
+
+		//castling right
+		if (rightRook != null && !rightRook.hasMoved())
+		{
+			boolean piecesInbetween = 
+					getPieceRef(homeRank, 5) != null ||
+					getPieceRef(homeRank, 6) != null;
+
+			if (!piecesInbetween)
+			{
+				Piece[][] newboard1 = cloneTable(board);
+				newboard1[homeRank][5] = newboard1[homeRank][4];
+				newboard1[homeRank][4] = null;
+				ChessBoard newcb1 = new ChessBoard(newboard1, nextMove);
+				
+				Piece[][] newboard2 = cloneTable(board);
+				newboard2[homeRank][6] = newboard2[homeRank][4];
+				newboard2[homeRank][4] = null;
+				ChessBoard newcb2 = new ChessBoard(newboard2, nextMove);
+				
+				if(!newcb1.isInCheck() && !newcb2.isInCheck())
+					possibleCastlings.add(new Move(homeRank, 4, homeRank, 6));
+			}
+		}
+		
+		return possibleCastlings;
+	}
+	// @formatter:on
+
 	ArrayList<Move> getAllPossibleNextMoves()
 	{
 		if (allPossibleMoves != null)
 			return allPossibleMoves;
+
+		//check for moving into check
+		//check for castling		
 
 		ArrayList<Move> moves = new ArrayList<>();
 		for (int i = 0; i < 8; i++)
