@@ -15,9 +15,13 @@ import java.net.*;
 //Projekt specifikus importok
 import chessnut.ILogic;
 import chessnut.IPlayer;
-import chessnut.IPlayer.*;
 import chessnut.logic.Position;
 import chessnut.logic.pieces.Piece;
+import chessnut.network.protocol.ChessnutOverIP;
+import chessnut.network.protocol.clickMess;
+import chessnut.network.protocol.notifyPromotionMess;
+import chessnut.network.protocol.promoteMess;
+import chessnut.network.protocol.setChessboardMess;
 
 public class NetworkClient extends Network implements ILogic
 {
@@ -48,6 +52,16 @@ public class NetworkClient extends Network implements ILogic
 		this.gui = player;
 	}
 	
+	// ! \brief Kapcsolat állapotát le lehet kérni
+	public boolean isConnected()
+	{
+		if (socket != null)
+		{
+			return socket.isConnected();
+		}
+		return false;
+	}
+	
 	// ! \brief Fogadó thread
 	private class ServerNotificaionReceiver implements Runnable
 	{
@@ -58,24 +72,32 @@ public class NetworkClient extends Network implements ILogic
 				while (true)
 				{
 					// Objektum beérkezése
-					IPlayerMsg received = (IPlayerMsg) in.readObject();
+					ChessnutOverIP received = (ChessnutOverIP) in.readObject();
 					
 					// Ha setChessboard üzenet jött
-					if(received instanceof IPlayerMsg_setChessboard )  //.msgType == IPlayerMsgType.setChessboard)
+					if(received instanceof setChessboardMess )  //.msgType == IPlayerMsgType.setChessboard)
 					{
-						System.out.println("setChessboard message arrived: \n" + ((IPlayerMsg_setChessboard)received).chessboard );
-						// TODO meghívni a rendes kezelõt, ha lesz mire
+						System.out.println("setChessboard message arrived: \n" + ((setChessboardMess)received).chessboard );
+						// Meghívom a kezelõt:
+						if(gui != null)
+						{
+							gui.setChessboard(((setChessboardMess)received).chessboard );
+						}
 					}
 					// Ha notifyPromotion jött
-					else if(received instanceof IPlayerMsg_notifyPromotion)
+					else if(received instanceof notifyPromotionMess)
 					{
-						System.out.println("notifyPromotion message arrived: \n" + ((IPlayerMsg_notifyPromotion)received).position );
-						// TODO meghívni a rendes kezelõt, ha lesz mire
+						System.out.println("notifyPromotion message arrived: \n" + ((notifyPromotionMess)received).position );
+						// Meghívom a kezelõt
+						if(gui != null)
+						{
+							gui.notifyPromotion(((notifyPromotionMess)received).position );
+						}
 					}
 					// Ha nem tudom mi jött
 					else
 					{
-						System.err.println("Nem tudom milyen objektum jött be: \n" + received);
+						System.err.println("Error: Unknown object received on network: \n" + received);
 					}
 				}
 			} catch (Exception ex)
@@ -136,7 +158,7 @@ public class NetworkClient extends Network implements ILogic
 	}
 
 	// ! \brief Adatküldés szerver oldalra
-	void sendMsgToServer(ILogicMsg msgToServer)
+	void sendMsgToServer(ChessnutOverIP msgToServer)
 	{
 		// Ha nincs meg az output stream, akkor gond van
 		if (out == null)
@@ -159,7 +181,8 @@ public class NetworkClient extends Network implements ILogic
 	@Override
 	public void click(Position position)
 	{
-		ILogicMsg msg = new ILogicMsg_click(position);
+		ChessnutOverIP msg = new clickMess(position);
+		System.out.println("Sending click: \n" + ((clickMess) msg).position);
 		sendMsgToServer(msg);
 	}
 	
@@ -167,7 +190,8 @@ public class NetworkClient extends Network implements ILogic
 	@Override
 	public void promote(Piece piece)
 	{
-		ILogicMsg msg = new ILogicMsg_promote(piece);
+		ChessnutOverIP msg = new promoteMess(piece);
+		System.out.println("Sending promote: \n" + ((promoteMess) msg).piece);
 		sendMsgToServer(msg);
 	}
 	

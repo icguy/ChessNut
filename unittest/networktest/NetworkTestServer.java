@@ -26,12 +26,22 @@ public class NetworkTestServer extends NetworkTest
 		Position pos = new Position(3, 2);
 		
 		// Várok, amíg a kapcsolat felépül
-		while( !((NetworkServer) server).isConnected() );
+		while( !((NetworkServer) server).isConnected() )
+		{
+			waitSec(1);
+		}
 		
-		
-		// Küldöm
-		server.setChessboard(cb);
-		server.notifyPromotion(pos);
-		
+		while (true)
+		{
+			waitSec(2);
+			
+			// Küldök sakktáblát
+			server.setChessboard(cb);
+			
+			waitSec(4);
+			
+			// Küldök gyalogváltást
+			server.notifyPromotion(pos);
+		}
 	}
 }

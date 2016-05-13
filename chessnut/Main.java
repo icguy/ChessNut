@@ -6,11 +6,6 @@
  *************************************************/
 package chessnut;
 
-import chessnut.logic.*;
-import chessnut.network.*;
-
-// PIG Tesztek, a végleges verzióba nem kellenek
-import unittest.networktest.*;
 
 public class Main
 {
@@ -19,15 +14,5 @@ public class Main
 	{
 		// TODO main függvény
 		
-		// PIG disznyóság, vedd ki. Csak konstruktor és szetter teszt volt
-		//ILogic gameLogic = new GameLogic();
-		//IPlayer gui = new GUI();
-		//IPlayer networkServer = new NetworkServer(gameLogic);
-		//gameLogic.setPlayer(networkServer);
-		
-		// PIG Network teszt
-		NetworkTest test = new NetworkTestServer();
-		//NetworkTest test = new NetworkTestClient();
-		test.start();
 	}
 }

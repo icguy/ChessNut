@@ -15,10 +15,14 @@ import java.net.Socket;
 
 // Projekt specifikus importok
 import chessnut.ILogic;
-import chessnut.ILogic.*;
 import chessnut.IPlayer;
 import chessnut.logic.ChessBoard;
 import chessnut.logic.Position;
+import chessnut.network.protocol.ChessnutOverIP;
+import chessnut.network.protocol.clickMess;
+import chessnut.network.protocol.notifyPromotionMess;
+import chessnut.network.protocol.promoteMess;
+import chessnut.network.protocol.setChessboardMess;
 
 
 //! \brief  Szerver oldali hálózatkezelõ osztály
@@ -26,9 +30,6 @@ public class NetworkServer extends Network implements IPlayer
 {
 	// Konstansok
 	private static final int port = 10007;     //!< Port
-	
-	// Él-e a kapcsolat
-	private boolean Connected = false;            //!< Él-e a kapcsolat
 	
 	// Kapcsolódás a játék többi eleméhez
 	private ILogic gameLogic;                  //!< Ezen érjük el a GameLogic-ot
@@ -58,13 +59,17 @@ public class NetworkServer extends Network implements IPlayer
 	//! \brief  Kapcsolat állapotát le lehet kérni
 	public boolean isConnected()
 	{
-		return Connected;
+		if(clientSocket != null)
+		{
+			return clientSocket.isConnected();
+		}
+		return false;
 	}
 	
 	
 	// ! \brief Fogadó thread
 	private class PlayerActionReceiver implements Runnable
-	{
+	{	
 		public void run()
 		{
 			try
@@ -72,8 +77,7 @@ public class NetworkServer extends Network implements IPlayer
 				System.out.println("Waiting for Client");
 				// Kliensre várakozás (blokkol)
 				clientSocket = serverSocket.accept();
-				// Kapcsolat létrejött:
-				Connected = true;
+				// Kapcsolat létrejött
 				System.out.println("Client connected.");
 			} catch (IOException e)
 			{
@@ -100,8 +104,35 @@ public class NetworkServer extends Network implements IPlayer
 				// Érkezõ objektumok itt jönnek be
 				while (true)
 				{
-					// Point received = (Point) in.readObject(); TODO Itt fogunk fogadni valamilyen osztályú valamit
-					// ctrl.clickReceived(received); TODO lesz egy feldolgozó metódusa ennek
+					// Üzenet bejön
+					ChessnutOverIP received = (ChessnutOverIP) in.readObject();
+					
+					// Ha click üzenet
+					if(received instanceof clickMess)
+					{
+						System.out.println("click message arrived: \n" + ((clickMess)received).position );
+						// Továbbadom a kezelõnek
+						if(gameLogic != null)
+						{
+							gameLogic.click(((clickMess)received).position);
+						}
+					}
+					
+					// Ha promote üzenet
+					else if(received instanceof promoteMess)
+					{
+						System.out.println("promote message arrived: \n" + ((promoteMess)received).piece );
+						// Továbbadom a kezelõnek
+						if(gameLogic != null)
+						{
+							gameLogic.promote(((promoteMess)received).piece);
+						}
+					}
+					// Ha nem tudom milyen üzenet
+					else
+					{
+						System.err.println("Error: Unknown object received on network: \n" + received);
+					}
 				}
 			} catch (Exception ex)
 			{
@@ -156,7 +187,7 @@ public class NetworkServer extends Network implements IPlayer
 	}
 	
 	//! \brief  Adatküldés kliens oldalra
-	void sendMsgToClient(IPlayerMsg msgToClient)
+	void sendMsgToClient(ChessnutOverIP msgToClient)
 	{		
 		// Ha nincs meg az output stream, akkor gond van
 		if (out == null)
@@ -180,8 +211,8 @@ public class NetworkServer extends Network implements IPlayer
 	@Override
 	public void setChessboard(ChessBoard chessboard)
 	{
-		IPlayerMsg msg = new IPlayerMsg_setChessboard(chessboard);
-		System.out.println("Sending setChessboard: \n" + ((IPlayerMsg_setChessboard) msg).chessboard);
+		ChessnutOverIP msg = new setChessboardMess(chessboard);
+		System.out.println("Sending setChessboard: \n" + ((setChessboardMess) msg).chessboard);
 		sendMsgToClient(msg);
 	}
 	
@@ -189,8 +220,8 @@ public class NetworkServer extends Network implements IPlayer
 	@Override
 	public void notifyPromotion(Position position)
 	{
-		IPlayerMsg msg = new IPlayerMsg_notifyPromotion(position);
-		System.out.println("Sending notifyPromotion: \n" + ((IPlayerMsg_notifyPromotion) msg).position);
+		ChessnutOverIP msg = new notifyPromotionMess(position);
+		System.out.println("Sending notifyPromotion: \n" + ((notifyPromotionMess) msg).position);
 		sendMsgToClient(msg);
 	}
 	
