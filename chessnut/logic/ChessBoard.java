@@ -110,15 +110,26 @@ public class ChessBoard implements Serializable
 		getAllPossibleNextMoves();
 		if (allPossibleMoves.contains(move))
 		{
-			//TODO check for castling n stuff
-
 			if (moving instanceof King && move.getDelta() == 2)
 			{
-				//castling
-
-				//				int homeRank = nextMove == PlayerColor.White ? 0 : 7;
-				//				if(start.getRank() != homeRank)
-				//					return false;
+				int rank = end.getRank();
+				int middleFile = -1, rookFile = -1;
+				if(end.getFile() == 6)
+				{
+					//castling right
+					middleFile = 5;
+					rookFile = 7;
+				}
+				else
+				{
+					//castling left
+					middleFile = 3;
+					rookFile = 0;
+				}
+				
+				//moving rook
+				board[rank][middleFile] = board[rank][rookFile];
+				board[rank][rookFile] = null;
 			}
 
 			//move
@@ -237,8 +248,8 @@ public class ChessBoard implements Serializable
 		//Neither the king nor the chosen rook has previously moved.  	OK
 		//There are no pieces between the king and the chosen rook.   	OK
 		//The king is not currently in check.							OK
-		//The king does not pass through a square that is attacked by an enemy piece.
-		//The king does not end up in check. (True of any legal move.)
+		//The king does not pass through a square that is attacked by an enemy piece. OK
+		//The king does not end up in check. (True of any legal move.)  OK
 		
 		ArrayList<Move> possibleCastlings = new ArrayList<>();
 		int homeRank = nextMove == PlayerColor.White ? 0 : 7;
@@ -257,7 +268,6 @@ public class ChessBoard implements Serializable
 		if (isInCheck())
 			return possibleCastlings;
 
-		//TODO
 		//castling left
 		if (leftRook != null && !leftRook.hasMoved())
 		{
@@ -266,7 +276,6 @@ public class ChessBoard implements Serializable
 					getPieceRef(homeRank, 2) != null ||
 					getPieceRef(homeRank, 3) != null;
 
-			//TODO refactor
 			if (!piecesInbetween)
 			{
 				boolean move1 = moveEndsUpInCheck(new Move(homeRank, 4, homeRank, 3));
