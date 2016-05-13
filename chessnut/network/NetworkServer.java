@@ -15,6 +15,7 @@ import java.net.Socket;
 
 // Projekt specifikus importok
 import chessnut.ILogic;
+import chessnut.ILogic.*;
 import chessnut.IPlayer;
 import chessnut.logic.ChessBoard;
 import chessnut.logic.Position;

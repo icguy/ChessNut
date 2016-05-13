@@ -14,7 +14,6 @@ import java.net.*;
 
 //Projekt specifikus importok
 import chessnut.ILogic;
-import chessnut.ILogic.*;
 import chessnut.IPlayer;
 import chessnut.IPlayer.*;
 import chessnut.logic.Position;
