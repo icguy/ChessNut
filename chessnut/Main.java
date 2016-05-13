@@ -26,8 +26,8 @@ public class Main
 		//gameLogic.setPlayer(networkServer);
 		
 		// PIG Network teszt
-		//NetworkTest test = new NetworkTestServer();
-		NetworkTest test = new NetworkTestClient();
+		NetworkTest test = new NetworkTestServer();
+		//NetworkTest test = new NetworkTestClient();
 		test.start();
 	}
 }
