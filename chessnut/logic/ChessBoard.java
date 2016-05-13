@@ -1,5 +1,6 @@
 package chessnut.logic;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import chessnut.logic.pieces.*;
 
@@ -7,8 +8,10 @@ import chessnut.logic.pieces.*;
  * board indices go from 0 to 7, where the first index is the rank, second is the file of
  * the corresponding position, e.g. [0][0] marks the 'a1' corner square.
  */
-public class ChessBoard
+public class ChessBoard implements Serializable
 {
+	private static final long serialVersionUID = 1532472295622732188L;  //!< Egyedi magicnumber a soros�t�shoz
+	
 	private Piece[][] board;
 	private PlayerColor nextMove;
 	private ArrayList<Move> allPossibleMoves;
@@ -118,11 +121,11 @@ public class ChessBoard
 				else
 					blackKingPos = end;
 
-				((King) moving).setHasMoved(true);
+				((King) moving).setMoved(true);
 			}
 			else if (moving instanceof Rook)
 			{
-				((Rook) moving).setHasMoved(true);
+				((Rook) moving).setMoved(true);
 			}
 
 			//clear cache
@@ -230,7 +233,7 @@ public class ChessBoard
 
 	ArrayList<Move> getNextMoves(Position position)
 	{
-		Piece piece = board[position.getRank()][position.getFile()];
+		Piece piece = getPieceRef(position);
 		if (piece == null || piece.getColor() != nextMove)
 			return null;
 
@@ -250,6 +253,8 @@ public class ChessBoard
 
 	public Piece getPiece(int rank, int file)
 	{
+		if (board[rank][file] == null)
+			return null;
 		return board[rank][file].clone();
 	}
 
@@ -287,6 +292,8 @@ public class ChessBoard
 		}
 		sb.append("  ---------------\n");
 		sb.append("  a b c d e f g h\n");
+		sb.append( nextMove == PlayerColor.White ? "white" : "black");
+		sb.append( " to move\n");
 		return sb.toString();
 	}
 
