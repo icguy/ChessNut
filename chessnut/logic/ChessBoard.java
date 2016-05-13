@@ -316,8 +316,7 @@ public class ChessBoard implements Serializable
 			return allPossibleMoves;
 
 		//check for moving into check
-		//check for castling		
-
+		
 		ArrayList<Move> moves = new ArrayList<>();
 		for (int i = 0; i < 8; i++)
 		{
@@ -328,6 +327,8 @@ public class ChessBoard implements Serializable
 					moves.addAll(curr);
 			}
 		}
+		
+		moves.addAll(getPossibleNextCastlingMoves());
 
 		allPossibleMoves = moves;
 		return moves;
