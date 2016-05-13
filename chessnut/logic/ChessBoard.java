@@ -10,8 +10,8 @@ import chessnut.logic.pieces.*;
  */
 public class ChessBoard implements Serializable
 {
-	private static final long serialVersionUID = 1532472295622732188L;  //!< Egyedi magicnumber a sorosÌt·shoz
-	
+	private static final long serialVersionUID = 1532472295622732188L; //!< Egyedi magicnumber a sorositashoz
+
 	private Piece[][] board;
 	private PlayerColor nextMove;
 	private ArrayList<Move> allPossibleMoves;
@@ -96,20 +96,43 @@ public class ChessBoard implements Serializable
 		updateKingPos();
 	}
 
+	//TODO pawn promotion
+
 	public boolean makeMove(Move move)
 	{
-		if (getPiece(move.getStart()).getColor() != nextMove)
+		Position start = move.getStart();
+		Position end = move.getEnd();
+		Piece moving = getPieceRef(start);
+
+		if (moving == null || moving.getColor() != nextMove)
 			return false;
 
 		getAllPossibleNextMoves();
 		if (allPossibleMoves.contains(move))
 		{
-			//TODO check for castling n stuff
+			if (moving instanceof King && move.getDelta() == 2)
+			{
+				int rank = end.getRank();
+				int middleFile = -1, rookFile = -1;
+				if(end.getFile() == 6)
+				{
+					//castling right
+					middleFile = 5;
+					rookFile = 7;
+				}
+				else
+				{
+					//castling left
+					middleFile = 3;
+					rookFile = 0;
+				}
+				
+				//moving rook
+				board[rank][middleFile] = board[rank][rookFile];
+				board[rank][rookFile] = null;
+			}
 
 			//move
-			Position start = move.getStart();
-			Position end = move.getEnd();
-			Piece moving = getPieceRef(start);
 			board[end.getRank()][end.getFile()] = board[start.getRank()][start.getFile()];
 			board[start.getRank()][start.getFile()] = null;
 
@@ -121,15 +144,16 @@ public class ChessBoard implements Serializable
 				else
 					blackKingPos = end;
 
-	//			((King) moving).setHasMoved(true);       TODO Kikommenteztem, hogy tudjon fordulni a program. (Bal·zs)
+				((King) moving).setMoved(true);
 			}
 			else if (moving instanceof Rook)
 			{
-	//			((Rook) moving).setHasMoved(true);        TODO Kikommenteztem, hogy tudjon fordulni a program. (Bal·zs)
+				((Rook) moving).setMoved(true);
 			}
 
 			//clear cache
 			allPossibleMoves = null;
+			nextMove = (nextMove == PlayerColor.White) ? PlayerColor.Black : PlayerColor.White;
 			return true;
 		}
 		return false;
@@ -211,7 +235,90 @@ public class ChessBoard implements Serializable
 		}
 	}
 
-	ArrayList<Move> getAllPossibleNextMoves()
+	public Object TestMethod(Object obj)
+	{
+		return getPossibleNextCastlingMoves();
+		//return moveEndsUpInCheck((Move) obj);
+	}
+
+	// @formatter:off
+	private ArrayList<Move> getPossibleNextCastlingMoves()
+	{
+		//The king and the chosen rook are on the player's first rank.	OK
+		//Neither the king nor the chosen rook has previously moved.  	OK
+		//There are no pieces between the king and the chosen rook.   	OK
+		//The king is not currently in check.							OK
+		//The king does not pass through a square that is attacked by an enemy piece. OK
+		//The king does not end up in check. (True of any legal move.)  OK
+		
+		ArrayList<Move> possibleCastlings = new ArrayList<>();
+		int homeRank = nextMove == PlayerColor.White ? 0 : 7;
+		Position kingPos = (nextMove == PlayerColor.White) ? whiteKingPos : blackKingPos;
+		King king = (King) getPieceRef(kingPos);
+
+		Rook leftRook, rightRook;
+		Piece leftPiece, rightPiece;
+		leftPiece = getPieceRef(new Position(homeRank, 0));
+		rightPiece = getPieceRef(new Position(homeRank, 7));
+		leftRook = (leftPiece instanceof Rook) ? (Rook) leftPiece : null;
+		rightRook = (rightPiece instanceof Rook) ? (Rook) rightPiece : null;
+
+		if (king.hasMoved())
+			return possibleCastlings;
+		if (isInCheck())
+			return possibleCastlings;
+
+		//castling left
+		if (leftRook != null && !leftRook.hasMoved())
+		{
+			boolean piecesInbetween = 
+					getPieceRef(homeRank, 1) != null ||
+					getPieceRef(homeRank, 2) != null ||
+					getPieceRef(homeRank, 3) != null;
+
+			if (!piecesInbetween)
+			{
+				boolean move1 = moveEndsUpInCheck(new Move(homeRank, 4, homeRank, 3));
+				boolean move2 = moveEndsUpInCheck(new Move(homeRank, 4, homeRank, 2));
+				
+				if(!move1 && ! move2)
+					possibleCastlings.add(new Move(homeRank, 4, homeRank, 2));
+			}
+		}
+
+		//castling right
+		if (rightRook != null && !rightRook.hasMoved())
+		{
+			boolean piecesInbetween = 
+					getPieceRef(homeRank, 5) != null ||
+					getPieceRef(homeRank, 6) != null;
+
+			if (!piecesInbetween)
+			{
+				boolean move1 = moveEndsUpInCheck(new Move(homeRank, 4, homeRank, 5));
+				boolean move2 = moveEndsUpInCheck(new Move(homeRank, 4, homeRank, 6));
+				
+				if(!move1 && ! move2)
+					possibleCastlings.add(new Move(homeRank, 4, homeRank, 6));
+			}
+		}
+		
+		return possibleCastlings;
+	}
+	// @formatter:on
+
+	private boolean moveEndsUpInCheck(Move move)
+	{
+		Position start = move.getStart();
+		Position end = move.getEnd();
+		Piece[][] newBoard = cloneTable(board);
+		newBoard[end.getRank()][end.getFile()] = newBoard[start.getRank()][start.getFile()];
+		newBoard[start.getRank()][start.getFile()] = null;
+		ChessBoard newChessBoard = new ChessBoard(newBoard, nextMove);
+		return newChessBoard.isInCheck();
+	}
+
+	private ArrayList<Move> getAllPossibleNextMoves()
 	{
 		if (allPossibleMoves != null)
 			return allPossibleMoves;
@@ -221,24 +328,30 @@ public class ChessBoard implements Serializable
 		{
 			for (int j = 0; j < 8; j++)
 			{
-				ArrayList<Move> curr = getNextMoves(new Position(i, j));
-				if (curr != null)
-					moves.addAll(curr);
+				ArrayList<Move> currList = getNextMoves(new Position(i, j));
+
+				for (Move move : currList)
+				{
+					if (!moveEndsUpInCheck(move))
+						moves.add(move);
+				}
 			}
 		}
+
+		moves.addAll(getPossibleNextCastlingMoves());
 
 		allPossibleMoves = moves;
 		return moves;
 	}
 
-	ArrayList<Move> getNextMoves(Position position)
+	private ArrayList<Move> getNextMoves(Position position)
 	{
-		Piece piece = board[position.getRank()][position.getFile()];
+		Piece piece = getPieceRef(position);
 		if (piece == null || piece.getColor() != nextMove)
-			return null;
+			return new ArrayList<>();
 
 		ArrayList<Move> moves = piece.getPossibleMoves(position, this);
-		return moves; //TODO extra szab√°lyok
+		return moves;
 	}
 
 	private Piece getPieceRef(Position pos)
@@ -251,8 +364,15 @@ public class ChessBoard implements Serializable
 		return board[rank][file];
 	}
 
+	public Piece[][] getBoard()
+	{
+		return cloneTable(board);
+	}
+
 	public Piece getPiece(int rank, int file)
 	{
+		if (board[rank][file] == null)
+			return null;
 		return board[rank][file].clone();
 	}
 
@@ -290,6 +410,8 @@ public class ChessBoard implements Serializable
 		}
 		sb.append("  ---------------\n");
 		sb.append("  a b c d e f g h\n");
+		sb.append(nextMove == PlayerColor.White ? "white" : "black");
+		sb.append(" to move\n");
 		return sb.toString();
 	}
 
