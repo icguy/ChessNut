@@ -265,6 +265,7 @@ public class ChessBoard implements Serializable
 					getPieceRef(homeRank, 2) != null ||
 					getPieceRef(homeRank, 3) != null;
 
+			//TODO refactor
 			if (!piecesInbetween)
 			{
 				Piece[][] newboard1 = cloneTable(board);
@@ -310,7 +311,17 @@ public class ChessBoard implements Serializable
 	}
 	// @formatter:on
 
-	ArrayList<Move> getAllPossibleNextMoves()
+	private boolean moveEndsUpInCheck(Move move)
+	{
+		ChessBoard temp = new ChessBoard(board, nextMove);
+		boolean success = temp.makeMove(move);
+		if(!success)
+			return false;
+		ChessBoard temp2 = new ChessBoard(temp.getBoard(), nextMove);
+		return temp2.isInCheck();
+	}
+	
+	private ArrayList<Move> getAllPossibleNextMoves()
 	{
 		if (allPossibleMoves != null)
 			return allPossibleMoves;
@@ -322,9 +333,15 @@ public class ChessBoard implements Serializable
 		{
 			for (int j = 0; j < 8; j++)
 			{
-				ArrayList<Move> curr = getNextMoves(new Position(i, j));
-				if (curr != null)
-					moves.addAll(curr);
+				ArrayList<Move> currList = getNextMoves(new Position(i, j));
+				if (currList != null)
+				{
+					for (Move move : currList)
+					{					
+						if(!moveEndsUpInCheck(move))
+							moves.add(move);
+					}
+				}
 			}
 		}
 		
@@ -334,7 +351,7 @@ public class ChessBoard implements Serializable
 		return moves;
 	}
 
-	ArrayList<Move> getNextMoves(Position position)
+	private ArrayList<Move> getNextMoves(Position position)
 	{
 		Piece piece = getPieceRef(position);
 		if (piece == null || piece.getColor() != nextMove)
@@ -354,6 +371,11 @@ public class ChessBoard implements Serializable
 		return board[rank][file];
 	}
 
+	public Piece[][] getBoard()
+	{
+		return cloneTable(board);
+	}
+	
 	public Piece getPiece(int rank, int file)
 	{
 		if (board[rank][file] == null)
