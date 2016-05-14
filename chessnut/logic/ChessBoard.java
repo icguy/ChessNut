@@ -106,15 +106,15 @@ public class ChessBoard implements Serializable
 	{
 		Position start = move.getStart();
 		Position end = move.getEnd();
-		Piece moving = getPieceRef(start);
+		Piece movingPiece = getPieceRef(start);
 
-		if (moving == null || moving.getColor() != nextMove)
+		if (movingPiece == null || movingPiece.getColor() != nextMove)
 			return false;
 
 		getAllPossibleNextMoves();
 		if (allPossibleMoves.contains(move))
 		{
-			if (moving instanceof King && move.getDelta() == 2)
+			if (movingPiece instanceof King && move.getDelta() == 2)
 			{
 				int rank = end.getRank();
 				int middleFile = -1, rookFile = -1;
@@ -141,26 +141,32 @@ public class ChessBoard implements Serializable
 			board[start.getRank()][start.getFile()] = null;
 
 			//update hasMoved, kingpos
-			if (moving instanceof King)
+			if (movingPiece instanceof King)
 			{
 				if (nextMove == PlayerColor.White)
 					whiteKingPos = end;
 				else
 					blackKingPos = end;
 
-				((King) moving).setMoved(true);
+				((King) movingPiece).setMoved(true);
 			}
-			else if (moving instanceof Rook)
+			else if (movingPiece instanceof Rook)
 			{
-				((Rook) moving).setMoved(true);
+				((Rook) movingPiece).setMoved(true);
 			}
 
 			//clear cache
 			allPossibleMoves = null;
-			nextMove = (nextMove == PlayerColor.White) ? PlayerColor.Black : PlayerColor.White;
+
+			changeNextMove();
 			return true;
 		}
 		return false;
+	}
+
+	private void changeNextMove()
+	{
+		nextMove = (nextMove == PlayerColor.White) ? PlayerColor.Black : PlayerColor.White;
 	}
 
 	public static Piece[][] cloneTable(Piece[][] table)
@@ -186,7 +192,7 @@ public class ChessBoard implements Serializable
 
 	public boolean isInCheck()
 	{
-		//TODO kell a check-et cache-elni?
+		// ha kell a check-et cache-elni, akkor itt tudod megcsinálni
 		return isInCheckInner();
 	}
 
@@ -428,7 +434,7 @@ public class ChessBoard implements Serializable
 	{
 		return selection;
 	}
-	
+
 	//no selection is null
 	public enum SelectionType
 	{
