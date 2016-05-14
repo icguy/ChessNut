@@ -18,6 +18,8 @@ public class ChessBoard implements Serializable
 	private ArrayList<Move> allPossibleMoves;
 	private Position blackKingPos;
 	private Position whiteKingPos;
+	private boolean awaitingPromotion;
+	private Position promotionPos; 
 
 	public ChessBoard()
 	{
@@ -102,8 +104,36 @@ public class ChessBoard implements Serializable
 
 	//TODO pawn promotion
 
+	public boolean Promote(Piece newPiece)
+	{
+		if(!awaitingPromotion)
+			return false;
+		if(newPiece instanceof King || newPiece instanceof Pawn)
+			return false;
+		if(newPiece.getColor() != nextMove)
+			return false;
+
+		int rank = promotionPos.getRank();
+		int file = promotionPos.getFile();
+		board[rank][file] = newPiece;
+		awaitingPromotion = false;
+		promotionPos = null;
+		changeNextMove();
+		return true;
+	}
+	
+	/**
+	 * If possible, makes a move on the chessboard
+	 * 
+	 * @param move
+	 *            the move to be made
+	 * @return true if the move could be made, false otherwise
+	 */
 	public boolean makeMove(Move move)
 	{
+		if(awaitingPromotion)
+			return false;
+		
 		Position start = move.getStart();
 		Position end = move.getEnd();
 		Piece movingPiece = getPieceRef(start);
@@ -159,6 +189,16 @@ public class ChessBoard implements Serializable
 			allPossibleMoves = null;
 
 			changeNextMove();
+			
+			//pawn promotion check
+			int pawnFinalRank = (nextMove == PlayerColor.White) ? 7 : 0;
+			if (movingPiece instanceof Pawn && end.getRank() == pawnFinalRank)
+			{
+				//promotion
+				awaitingPromotion = true;
+				promotionPos = end;
+				changeNextMove(); //next move is the same as before
+			}
 			return true;
 		}
 		return false;
@@ -167,6 +207,16 @@ public class ChessBoard implements Serializable
 	private void changeNextMove()
 	{
 		nextMove = (nextMove == PlayerColor.White) ? PlayerColor.Black : PlayerColor.White;
+	}
+	
+	public boolean isAwaitingPromotion()
+	{
+		return awaitingPromotion;
+	}
+
+	public Position getPromotionPos()
+	{
+		return promotionPos;
 	}
 
 	public static Piece[][] cloneTable(Piece[][] table)
