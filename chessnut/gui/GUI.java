@@ -67,7 +67,14 @@ public class GUI extends JFrame implements IPlayer
 				// Kliens indítása, ha még nem fut játék
 				if( !gameStarted )
 				{
-					Main.setupClient();  // Kliens szetup
+					InputIPAddrDialog ipDialog = new InputIPAddrDialog();
+					String IP = null;
+					while ( IP == null )
+					{
+						IP = ipDialog.getIp();
+					}
+					
+					Main.setupClient(IP);  // Kliens szetup
 					myPlayerColor = PlayerColor.Black;
 					gameStarted = true;
 				}

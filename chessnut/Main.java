@@ -17,9 +17,7 @@ import chessnut.network.*;
 
 //! \brief  Program fõ osztálya
 public class Main
-{
-	private static final String ServerIpAddr = "localhost";
-	
+{	
 	// PIG ezek késõbb privátak lesznek, ha már kell rajta teszteknek futni
 	public static GUI     GUI;          //!< GUI mindkét oldalon van
 	public static IPlayer Opponent;     //!< Szervernél a hálózat/AI, kliensnél nincs
@@ -48,12 +46,12 @@ public class Main
 	
 	
 	//! \brief  Kliens oldal felállítása
-	public static void setupClient()
+	public static void setupClient(String IP)
 	{
 		Logic = new NetworkClient();                  // Kliens oldali hálózat jelképezi a logikát
 		Logic.setPlayer(GUI);                         // Az õ játékosa a GUI
 		GUI.setGameLogic(Logic);                      // GUI logikája a hálózat
-		((NetworkClient) Logic).connect(ServerIpAddr); // Csatlakozás
+		((NetworkClient) Logic).connect(IP); // Csatlakozás
 		
 		// PIG tesztek
 		//NetworkTestClient nwTest = new NetworkTestClient();

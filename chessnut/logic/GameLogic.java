@@ -31,7 +31,6 @@ public class GameLogic implements ILogic
 	public void setPlayer(IPlayer player)
 	{
 		this.opponent = player;
-		// TODO konstruktorba egyéb dolgok, például
 	}
 	
 	//! \brief  Click kezelése
@@ -39,7 +38,7 @@ public class GameLogic implements ILogic
 	public void click(Position position)
 	{
 		System.out.println("GameLogic handles click.");
-		// TODO Klikk kezelése
+		// TODO {GameLogic} Klikk kezelése
 		
 	}
 	
@@ -48,7 +47,7 @@ public class GameLogic implements ILogic
 	public void promote(Piece piece)
 	{
 		System.out.println("GameLogic handles promote.");
-		// TODO Beérkezõ promóció kezelése
+		// TODO {GameLogic} Beérkezõ promóció kezelése
 		
 	}
 }

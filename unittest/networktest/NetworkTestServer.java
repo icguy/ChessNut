@@ -53,7 +53,7 @@ public class NetworkTestServer extends NetworkTest
 	public void start()
 	{
 		// Beállítom tesztelendõ szervernek a Main szerverét
-		server = Main.Opponent;   // Nem szép, de kell, hogy bele tudjak tesztelni a fõprogramba
+		server = Main.Opponent;   // PIG A végleges verzióban kikommentezni ezt a sort
 		
 		// Külön thread-ben fut a teszt
 		Thread testServerThread = new Thread(new ServerTestRunnable());
