@@ -20,7 +20,7 @@ public class ChessBoard implements Serializable
 	private Position whiteKingPos;
 	private boolean awaitingPromotion;
 	private Position promotionPos;
-	private ChessgameState gameState; 
+	private ChessgameState gameState;
 
 	public ChessBoard()
 	{
@@ -107,13 +107,13 @@ public class ChessBoard implements Serializable
 
 	public boolean Promote(Piece newPiece)
 	{
-		if(!awaitingPromotion)
+		if (!awaitingPromotion)
 			return false;
-		if(newPiece instanceof King || newPiece instanceof Pawn)
+		if (newPiece instanceof King || newPiece instanceof Pawn)
 			return false;
-		if(newPiece.getColor() != nextMove)
+		if (newPiece.getColor() != nextMove)
 			return false;
-		if(gameState != ChessgameState.Playing)
+		if (gameState != ChessgameState.Playing)
 			return false;
 
 		int rank = promotionPos.getRank();
@@ -125,7 +125,7 @@ public class ChessBoard implements Serializable
 		updateGameState();
 		return true;
 	}
-	
+
 	/**
 	 * If possible, makes a move on the chessboard
 	 * 
@@ -134,12 +134,12 @@ public class ChessBoard implements Serializable
 	 * @return true if the move could be made, false otherwise
 	 */
 	public boolean makeMove(Move move)
-	{		
-		if(awaitingPromotion)
+	{
+		if (awaitingPromotion)
 			return false;
-		if(gameState != ChessgameState.Playing)
+		if (gameState != ChessgameState.Playing)
 			return false;
-		
+
 		Position start = move.getStart();
 		Position end = move.getEnd();
 		Piece movingPiece = getPieceRef(start);
@@ -195,7 +195,7 @@ public class ChessBoard implements Serializable
 			allPossibleMoves = null;
 
 			changeNextMove();
-			
+
 			//pawn promotion check
 			int pawnFinalRank = (nextMove == PlayerColor.White) ? 7 : 0;
 			if (movingPiece instanceof Pawn && end.getRank() == pawnFinalRank)
@@ -214,21 +214,6 @@ public class ChessBoard implements Serializable
 	private void changeNextMove()
 	{
 		nextMove = (nextMove == PlayerColor.White) ? PlayerColor.Black : PlayerColor.White;
-	}
-	
-	public boolean isAwaitingPromotion()
-	{
-		return awaitingPromotion;
-	}
-
-	public Position getPromotionPos()
-	{
-		return promotionPos;
-	}
-
-	public ChessgameState getGameState()
-	{
-		return gameState;
 	}
 
 	public static Piece[][] cloneTable(Piece[][] table)
@@ -250,12 +235,6 @@ public class ChessBoard implements Serializable
 			}
 		}
 		return newtable;
-	}
-
-	public boolean isInCheck()
-	{
-		// ha kell a check-et cache-elni, akkor itt tudod megcsinálni
-		return isInCheckInner();
 	}
 
 	private boolean isInCheckInner()
@@ -292,9 +271,9 @@ public class ChessBoard implements Serializable
 	private void updateGameState()
 	{
 		getAllPossibleNextMoves();
-		if(allPossibleMoves.isEmpty())
+		if (allPossibleMoves.isEmpty())
 		{
-			if(isInCheck())
+			if (isInCheck())
 				gameState = ChessgameState.Checkmate;
 			else
 				gameState = ChessgameState.Stalemate;
@@ -304,7 +283,7 @@ public class ChessBoard implements Serializable
 			gameState = ChessgameState.Playing;
 		}
 	}
-	
+
 	private void updateKingPos()
 	{
 		for (int i = 0; i < 8; i++)
@@ -469,6 +448,27 @@ public class ChessBoard implements Serializable
 		return getPiece(pos.getRank(), pos.getFile());
 	}
 
+	public boolean isAwaitingPromotion()
+	{
+		return awaitingPromotion;
+	}
+
+	public Position getPromotionPos()
+	{
+		return promotionPos;
+	}
+
+	public ChessgameState getGameState()
+	{
+		return gameState;
+	}
+
+	public boolean isInCheck()
+	{
+		// ha kell a check-et cache-elni, akkor itt tudod megcsinálni
+		return isInCheckInner();
+	}
+
 	@Override
 	public String toString()
 	{
@@ -519,7 +519,7 @@ public class ChessBoard implements Serializable
 		Stalemate,
 		Checkmate
 	}
-	
+
 	//no selection is null
 	public enum SelectionType
 	{
