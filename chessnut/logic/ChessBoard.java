@@ -12,6 +12,7 @@ public class ChessBoard implements Serializable
 {
 	private static final long serialVersionUID = 1532472295622732188L; //!< Egyedi magicnumber a sorositashoz
 
+	private SelectionType[][] selection;
 	private Piece[][] board;
 	private PlayerColor nextMove;
 	private ArrayList<Move> allPossibleMoves;
@@ -20,6 +21,7 @@ public class ChessBoard implements Serializable
 
 	public ChessBoard()
 	{
+		selection = new SelectionType[8][8];
 		board = new Piece[8][8];
 		nextMove = PlayerColor.White;
 		initBoard();
@@ -27,6 +29,7 @@ public class ChessBoard implements Serializable
 
 	public ChessBoard(Piece[][] board, PlayerColor nextMove)
 	{
+		this.selection = new SelectionType[8][8];
 		this.board = cloneTable(board);
 		this.nextMove = nextMove;
 		updateKingPos();
@@ -38,6 +41,7 @@ public class ChessBoard implements Serializable
 		//if(pos.length != pieces.length)
 		//	throw new IllegalArgumentException();
 
+		selection = new SelectionType[8][8];
 		board = new Piece[8][8];
 		this.nextMove = nextMove;
 
@@ -418,5 +422,17 @@ public class ChessBoard implements Serializable
 	public ChessBoard clone()
 	{
 		return new ChessBoard(board, nextMove);
+	}
+
+	public SelectionType[][] getSelections()
+	{
+		return selection;
+	}
+	
+	//no selection is null
+	public enum SelectionType
+	{
+		SourceSelected,
+		DestinationSelected
 	}
 }
