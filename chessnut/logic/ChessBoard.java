@@ -216,27 +216,6 @@ public class ChessBoard implements Serializable
 		nextMove = (nextMove == PlayerColor.White) ? PlayerColor.Black : PlayerColor.White;
 	}
 
-	public static Piece[][] cloneTable(Piece[][] table)
-	{
-		Piece[][] newtable = new Piece[table.length][];
-		for (int i = 0; i < newtable.length; i++)
-		{
-			newtable[i] = new Piece[table[i].length];
-			for (int j = 0; j < newtable[i].length; j++)
-			{
-				if (table[i][j] == null)
-				{
-					newtable[i][j] = null;
-				}
-				else
-				{
-					newtable[i][j] = table[i][j].clone();
-				}
-			}
-		}
-		return newtable;
-	}
-
 	private boolean isInCheckInner()
 	{
 		Position kingPos = (nextMove == PlayerColor.White) ? whiteKingPos : blackKingPos;
@@ -511,6 +490,27 @@ public class ChessBoard implements Serializable
 	public SelectionType[][] getSelections()
 	{
 		return selection;
+	}
+
+	public static Piece[][] cloneTable(Piece[][] table)
+	{
+		Piece[][] newtable = new Piece[table.length][];
+		for (int i = 0; i < newtable.length; i++)
+		{
+			newtable[i] = new Piece[table[i].length];
+			for (int j = 0; j < newtable[i].length; j++)
+			{
+				if (table[i][j] == null)
+				{
+					newtable[i][j] = null;
+				}
+				else
+				{
+					newtable[i][j] = table[i][j].clone();
+				}
+			}
+		}
+		return newtable;
 	}
 
 	public enum ChessgameState
