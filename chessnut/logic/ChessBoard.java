@@ -19,7 +19,8 @@ public class ChessBoard implements Serializable
 	private Position blackKingPos;
 	private Position whiteKingPos;
 	private boolean awaitingPromotion;
-	private Position promotionPos; 
+	private Position promotionPos;
+	private ChessgameState gameState; 
 
 	public ChessBoard()
 	{
@@ -27,6 +28,8 @@ public class ChessBoard implements Serializable
 		board = new Piece[8][8];
 		nextMove = PlayerColor.White;
 		initBoard();
+		updateKingPos();
+		updateGameState();
 	}
 
 	public ChessBoard(Piece[][] board, PlayerColor nextMove)
@@ -35,6 +38,7 @@ public class ChessBoard implements Serializable
 		this.board = cloneTable(board);
 		this.nextMove = nextMove;
 		updateKingPos();
+		updateGameState();
 	}
 
 	ChessBoard(Position[] pos, Piece[] pieces, PlayerColor nextMove)
@@ -63,9 +67,10 @@ public class ChessBoard implements Serializable
 		}
 
 		updateKingPos();
+		updateGameState();
 	}
 
-	void initBoard()
+	private void initBoard()
 	{
 		for (int i = 0; i < 8; i++)
 		{
@@ -98,11 +103,7 @@ public class ChessBoard implements Serializable
 		board[7][5] = new Bishop(PlayerColor.Black);
 		board[7][6] = new Knight(PlayerColor.Black);
 		board[7][7] = new Rook(PlayerColor.Black);
-
-		updateKingPos();
 	}
-
-	//TODO stalemate, checkmate handling
 
 	public boolean Promote(Piece newPiece)
 	{
@@ -112,6 +113,8 @@ public class ChessBoard implements Serializable
 			return false;
 		if(newPiece.getColor() != nextMove)
 			return false;
+		if(gameState != ChessgameState.Playing)
+			return false;
 
 		int rank = promotionPos.getRank();
 		int file = promotionPos.getFile();
@@ -119,6 +122,7 @@ public class ChessBoard implements Serializable
 		awaitingPromotion = false;
 		promotionPos = null;
 		changeNextMove();
+		updateGameState();
 		return true;
 	}
 	
@@ -130,8 +134,10 @@ public class ChessBoard implements Serializable
 	 * @return true if the move could be made, false otherwise
 	 */
 	public boolean makeMove(Move move)
-	{
+	{		
 		if(awaitingPromotion)
+			return false;
+		if(gameState != ChessgameState.Playing)
 			return false;
 		
 		Position start = move.getStart();
@@ -199,6 +205,7 @@ public class ChessBoard implements Serializable
 				promotionPos = end;
 				changeNextMove(); //next move is the same as before
 			}
+			updateGameState();
 			return true;
 		}
 		return false;
@@ -217,6 +224,11 @@ public class ChessBoard implements Serializable
 	public Position getPromotionPos()
 	{
 		return promotionPos;
+	}
+
+	public ChessgameState getGameState()
+	{
+		return gameState;
 	}
 
 	public static Piece[][] cloneTable(Piece[][] table)
@@ -277,6 +289,22 @@ public class ChessBoard implements Serializable
 		return false;
 	}
 
+	private void updateGameState()
+	{
+		getAllPossibleNextMoves();
+		if(allPossibleMoves.isEmpty())
+		{
+			if(isInCheck())
+				gameState = ChessgameState.Checkmate;
+			else
+				gameState = ChessgameState.Stalemate;
+		}
+		else
+		{
+			gameState = ChessgameState.Playing;
+		}
+	}
+	
 	private void updateKingPos()
 	{
 		for (int i = 0; i < 8; i++)
