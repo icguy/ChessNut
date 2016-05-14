@@ -41,33 +41,15 @@ public class ChessBoard implements Serializable
 		updateGameState();
 	}
 
-	ChessBoard(Position[] pos, Piece[] pieces, PlayerColor nextMove)
+	private ChessBoard(Piece[][] board, PlayerColor nextMove, ChessgameState gameState)
 	{
-		assert (pos.length == pieces.length);
-		//if(pos.length != pieces.length)
-		//	throw new IllegalArgumentException();
-
-		selection = new SelectionType[8][8];
-		board = new Piece[8][8];
+		this.selection = new SelectionType[8][8];
+		this.board = cloneTable(board);
 		this.nextMove = nextMove;
-
-		for (int i = 0; i < 8; i++)
-		{
-			for (int j = 0; j < 8; j++)
-			{
-				board[i][j] = null;
-			}
-		}
-
-		for (int i = 0; i < pos.length; i++)
-		{
-			Position currPos = pos[i];
-			Piece currPiece = pieces[i];
-			board[currPos.getRank()][currPos.getFile()] = currPiece;
-		}
-
+		this.gameState = gameState;
 		updateKingPos();
-		updateGameState();
+		//no updateGameState(), because that leads to stack overflow.
+		//only to be used when constructing boards for analyzis (determining check etc.)
 	}
 
 	private void initBoard()
@@ -360,7 +342,7 @@ public class ChessBoard implements Serializable
 		Piece[][] newBoard = cloneTable(board);
 		newBoard[end.getRank()][end.getFile()] = newBoard[start.getRank()][start.getFile()];
 		newBoard[start.getRank()][start.getFile()] = null;
-		ChessBoard newChessBoard = new ChessBoard(newBoard, nextMove);
+		ChessBoard newChessBoard = new ChessBoard(newBoard, nextMove, ChessgameState.Playing);
 		return newChessBoard.isInCheck();
 	}
 
