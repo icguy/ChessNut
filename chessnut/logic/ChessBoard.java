@@ -364,7 +364,7 @@ public class ChessBoard implements Serializable
 		return newChessBoard.isInCheck();
 	}
 
-	private ArrayList<Move> getAllPossibleNextMoves()
+	public ArrayList<Move> getAllPossibleNextMoves()
 	{
 		if (allPossibleMoves != null)
 			return allPossibleMoves;
