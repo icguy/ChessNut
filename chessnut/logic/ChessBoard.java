@@ -114,7 +114,7 @@ public class ChessBoard implements Serializable
 			{
 				int rank = end.getRank();
 				int middleFile = -1, rookFile = -1;
-				if(end.getFile() == 6)
+				if (end.getFile() == 6)
 				{
 					//castling right
 					middleFile = 5;
@@ -126,7 +126,7 @@ public class ChessBoard implements Serializable
 					middleFile = 3;
 					rookFile = 0;
 				}
-				
+
 				//moving rook
 				board[rank][middleFile] = board[rank][rookFile];
 				board[rank][rookFile] = null;
