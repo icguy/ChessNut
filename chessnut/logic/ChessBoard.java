@@ -102,7 +102,7 @@ public class ChessBoard implements Serializable
 		updateKingPos();
 	}
 
-	//TODO pawn promotion
+	//TODO stalemate, checkmate handling
 
 	public boolean Promote(Piece newPiece)
 	{
@@ -485,6 +485,13 @@ public class ChessBoard implements Serializable
 		return selection;
 	}
 
+	public enum ChessgameState
+	{
+		Playing,
+		Stalemate,
+		Checkmate
+	}
+	
 	//no selection is null
 	public enum SelectionType
 	{
