@@ -10,7 +10,7 @@ import chessnut.ILogic;
 import chessnut.IPlayer;
 import chessnut.gui.GUI;
 import chessnut.logic.Position;
-import chessnut.logic.pieces.Piece;
+import chessnut.logic.pieces.*;
 
 public class GameLogic implements ILogic
 {
@@ -21,7 +21,7 @@ public class GameLogic implements ILogic
 	
 	
 	//! \brief  Létrehozás GUI alapján
-	public GameLogic( GUI gui )
+	public GameLogic( IPlayer gui )
 	{
 		this.gui = gui;
 	}
@@ -45,7 +45,7 @@ public class GameLogic implements ILogic
 	//! \brief  Gyalog elõléptetés kezelése
 	@Override
 	public void promote(Piece piece)
-	{
+	{		
 		System.out.println("GameLogic handles promote.");
 		// TODO {GameLogic} Beérkezõ promóció kezelése
 		
