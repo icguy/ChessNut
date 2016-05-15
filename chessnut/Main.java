@@ -39,6 +39,7 @@ public class Main
 		Logic.setPlayer(Opponent);                   // Beállítom a hálózatot ellenfélnek
 		((NetworkServer) Opponent).connect("localhost"); // Hálózat nyitása
 		
+		
 		// PIG teszt: késõbb kivenni
 		//NetworkTestServer nwTest = new NetworkTestServer();
 		//nwTest.start();     // Teszt indítása
@@ -58,7 +59,7 @@ public class Main
 		//nwTest.start();    // Teszt indítása
 	}
 	
-	//! \brief  Kliens oldal felállítása
+	//! \brief  SinglePlayer játék felállítása
 	public static void setupSinglePlayer()
 	{
 		Logic = new GameLogic(GUI);                  // Játéklogikát létrehozom

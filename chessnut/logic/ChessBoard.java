@@ -423,6 +423,11 @@ public class ChessBoard implements Serializable
 	{
 		return gameState;
 	}
+	
+	public PlayerColor getNextToMove()
+	{
+		return this.nextMove;
+	}
 
 	public boolean isInCheck()
 	{

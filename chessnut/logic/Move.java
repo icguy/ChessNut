@@ -1,7 +1,10 @@
 package chessnut.logic;
 
-public class Move
+import java.io.Serializable;
+
+public class Move implements Serializable
 {
+	private static final long serialVersionUID = 1239854373685948372L;  // Várok, amíg a kliens becsatlakozik
 	final private Position start;
 	final private Position end;
 
