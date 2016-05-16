@@ -129,6 +129,8 @@ public class ChessBoard implements Serializable
 
 		if (movingPiece == null || movingPiece.getColor() != nextMove)
 			return false;
+		if (end.equals(start))
+			return false;
 
 		getAllPossibleNextMoves();
 		if (allPossibleMoves.contains(move))
@@ -513,11 +515,6 @@ public class ChessBoard implements Serializable
 		return new ChessBoard(board, nextMove);
 	}
 
-	public SelectionType[][] getSelections()
-	{
-		return selection;
-	}
-
 	public static Piece[][] cloneTable(Piece[][] table)
 	{
 		Piece[][] newtable = new Piece[table.length][];
@@ -537,6 +534,46 @@ public class ChessBoard implements Serializable
 			}
 		}
 		return newtable;
+	}
+	
+	/*------------------- SELECTION RELATED METHODS -------------------*/
+
+	public SelectionType[][] getSelections()
+	{
+		return selection;
+	}
+
+	public void selectHighlightSquare(Position selectedPos)
+	{
+		if (getPieceRef(selectedPos) == null)
+			return;
+
+		setHighlight(selectedPos, SelectionType.SourceSelected);
+
+		getAllPossibleNextMoves();
+		for (Move move : allPossibleMoves)
+		{
+			if (move.getStart().equals(selectedPos))
+			{
+				setHighlight(move.getEnd(), SelectionType.DestinationSelected);
+			}
+		}
+	}
+
+	public void clearHighlightSelection()
+	{
+		for (int i = 0; i < 8; i++)
+		{
+			for (int j = 0; j < 8; j++)
+			{
+				selection[i][j] = null;
+			}
+		}
+	}
+
+	public void setHighlight(Position pos, SelectionType type)
+	{
+		selection[pos.getRank()][pos.getFile()] = type;
 	}
 
 	public enum ChessgameState
