@@ -21,11 +21,8 @@ public class GameLogic implements ILogic
 	IPlayer opponent;          //!< Másik játékos: AI / Network
 	
 	private boolean gameStarted = false;        //!< Azzal kezdõdik a játék, hogy az induló táblákat kiküldtem
-	
-	private PlayerColor playerMakesMoveNow;     //!< Aki most kattintgat. Ezt azért kell itt is megjegyeznem, mert a lépés után a chessboard-ban már át fog állni, és így nem tudnám, hogy kinek kell visszaküldeni 
 	private Position currentMoveStart = null;          //!< Folyamatban lévõ lépés kezdete. null, ha nincs semmi kijelölve
-	
-	
+		
 	//! \brief  Létrehozás GUI alapján
 	public GameLogic( IPlayer gui )
 	{
@@ -57,78 +54,74 @@ public class GameLogic implements ILogic
 		if(chessboard.getNextToMove() != player)
 		{
 			return;
-		}
+		}		
 		
+		// Elsõ kattintása jön:
+		if( currentMoveStart == null )
+		{
+    		firstClick(position);
+		}
+		else // Második kattintása jön:
+		{
+			secondClick(position);
+		}				
+	}
+	
+	private void firstClick(Position position)
+	{
 		// Ha nem a saját színére kattintott, akkor nem foglalkozok vele
 		if (chessboard.getPiece(position).getColor() != chessboard.getNextToMove() )
 		{
 			return;
 		}
 		
-		// Elsõ kattintása jön:
-		if( currentMoveStart == null )
+		// Elmentem a lépés kiinduló mezõjét
+		currentMoveStart = position;
+		
+		// Kijelölöm a sakktáblán ezt a mezõt, és a lehetséges célmezõket
+		chessboard.selectHighlightSquare(position);
+		
+		// Visszaküldöm az adott játékosnak az új sakktáblát, amelyen a kijelölés már szerepel
+		SendChessboardToOne(chessboard.getNextToMove());
+	}
+	
+	private void secondClick(Position position)
+	{
+		PlayerColor playerMakesMoveNow = chessboard.getNextToMove();
+		
+		// Ha sikeres lépés volt
+		if( chessboard.makeMove(new Move(this.currentMoveStart, position)))
 		{
-			// Elmentem a lépés kiinduló mezõjét
-			currentMoveStart = position;
+			chessboard.clearHighlightSelection();
 			
-			// Kijelölöm a sakktáblán ezt a mezõt a lépés kezdetének,
-			/*
-			 *  TODO - {Chessboard} hogyan? kéne rá egy függvény a chessboard-ban,
-			 *  ami egy position-nel megadott mezõt highlightol kezdeti mezõnek az adott táblán
-			 */
+			// Kiküldöm a lépést meglépõ játékosnak
+			SendChessboardToOne(playerMakesMoveNow);
 			
-			// Visszaküldöm az adott játékosnak az új sakktáblát, amelyen a kijelölés már szerepel
-			SendChessboardToOne(chessboard.getNextToMove());
-			
-			// Elsõ kattintás sikeresen megvolt, várom a másodikat
-			playerMakesMoveNow = chessboard.getNextToMove();
-		}
-		// Második kattintása jön:
-		{
-			// Ha sikeres lépés volt
-			if( chessboard.makeMove(new Move(this.currentMoveStart, position)))
+			// Ha gyalogváltás kell, akkor küldök rá kérést
+			if(chessboard.isAwaitingPromotion())
 			{
-				// Kijelölöm a sakktáblán a cél mezõt
-				/*
-				 * TODO - {Chessboard} - a cél mezõt Position alapján kijelölõ függvény kéne
-				 */
-				
-				// Kiküldöm a lépést meglépõ játékosnak, ahol szépen világítani fog, hogy mit lépett
-				SendChessboardToOne(playerMakesMoveNow);
-				
-				// Ha gyalogváltás kell, akkor küldök rá kérést
-				if(chessboard.isAwaitingPromotion())
-				{
-					sendNotifyPromotionToOne(playerMakesMoveNow);
-					return; // És haza is megyek, mert nincs mit kiküldeni, ameddig ez le nem zajlott.
-				}
-				
-				// Törlöm a highlight-okat a tábláról, azt a másik játékosnak nem küldöm ki
-				/*
-				 * TODO {Chessboard} - osszes highlight-ot törlõ függvény megint
-				 */
-				
+				sendNotifyPromotionToOne(playerMakesMoveNow);
+				return; // És haza is megyek, mert nincs mit kiküldeni, ameddig ez le nem zajlott.
+			}
+			else
+			{				
 				// Kiküldöm a másiknak is a highlight-olatlan táblát
 				SendChessboardToOne(chessboard.getNextToMove());
+				playerMakesMoveNow = chessboard.getNextToMove();
 			}
-			// Ha nem volt sikeres lépés
-			else
-			{
-				// Összes highlight-ot törlöm a tábláról
-				/*
-				 * TODO {Chessboard} - osszes highlight-ot törlõ függvény megint megint
-				 */
-				
-				// Kiküldöm újra mindkét játékosnak a táblát
-				sendChessboardToBoth();
-			}
+		}			
+		else // Ha nem volt sikeres lépés
+		{
+			chessboard.clearHighlightSelection();
 			
-			// Újrakezdem a folyamatot
-			currentMoveStart = null;
+			// Kiküldöm újra a játékosnak a táblát
+			SendChessboardToOne(chessboard.getNextToMove());
 		}
 		
-		
+		// Újrakezdem a folyamatot
+		currentMoveStart = null;
 	}
+
 	
 	//! \brief  Gyalog elõléptetés kezelése
 	@Override
