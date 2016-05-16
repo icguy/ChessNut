@@ -186,7 +186,7 @@ public class NetworkClient extends Network implements ILogic
 	@Override
 	public void click(Position position, PlayerColor player)
 	{
-		ChessnutOverIP msg = new clickMess(position);
+		ChessnutOverIP msg = new clickMess(position, player);
 		System.out.println("Sending click: \n" + ((clickMess) msg).position);
 		sendMsgToServer(msg);
 	}

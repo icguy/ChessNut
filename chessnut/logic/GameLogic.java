@@ -54,10 +54,16 @@ public class GameLogic implements ILogic
 			return;
 		}
 		
-		// Megnézem, hogy a kiválasztott bábu színe a soron következõ játékosé -e
+		// Ha nem õ jön, akkor minek kattintgat?
+		if(chessboard.getNextToMove() != player)
+		{
+			return;
+		}
+		
+		// Ha nem a saját színére kattintott, akkor nem foglalkozok vele
 		if (chessboard.getPiece(position).getColor() != chessboard.getNextToMove() )
 		{
-			return; // Ha nem õ jön, akkor minek kattintgat?
+			return;
 		}
 		
 		// Elsõ kattintása jön:

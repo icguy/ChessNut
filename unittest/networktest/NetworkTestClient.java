@@ -35,7 +35,7 @@ public class NetworkTestClient extends NetworkTest
 			{
 				// Click-et küldök
 				waitSec(3);
-				client.click(pos);
+				client.click(pos, PlayerColor.Black);
 				
 				// Promote-ot küldök
 				waitSec(1);
