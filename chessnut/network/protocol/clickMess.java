@@ -6,16 +6,19 @@
  *************************************************/
 package chessnut.network.protocol;
 
+import chessnut.logic.PlayerColor;
 import chessnut.logic.Position;
 
 public class clickMess extends ChessnutOverIP
 {
 	private static final long serialVersionUID = 7526163295624857149L;  //!< Egyedi magicnumber a sorosításhoz
 	public Position position;      //!< Klikkelt pozíció
+	public PlayerColor player;     //!< Ki küldte
 	
 	//! \brief  Üzenet létrehozó konstruktor
-	public clickMess(Position position)
+	public clickMess(Position position, PlayerColor player)
 	{
 		this.position = position;
+		this.player = player;
 	}
 }
