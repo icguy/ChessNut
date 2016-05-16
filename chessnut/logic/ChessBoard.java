@@ -103,6 +103,7 @@ public class ChessBoard implements Serializable
 		board[rank][file] = newPiece;
 		awaitingPromotion = false;
 		promotionPos = null;
+		allPossibleMoves = null;
 		changeNextMove();
 		updateGameState();
 		return true;
@@ -176,8 +177,6 @@ public class ChessBoard implements Serializable
 			//clear cache
 			allPossibleMoves = null;
 
-			changeNextMove();
-
 			//pawn promotion check
 			int pawnFinalRank = (nextMove == PlayerColor.White) ? 7 : 0;
 			if (movingPiece instanceof Pawn && end.getRank() == pawnFinalRank)
@@ -185,7 +184,11 @@ public class ChessBoard implements Serializable
 				//promotion
 				awaitingPromotion = true;
 				promotionPos = end;
-				changeNextMove(); //next move is the same as before
+			}
+			else
+			{
+				//if no promotion, next player's turn
+				changeNextMove();
 			}
 			updateGameState();
 			return true;
@@ -371,7 +374,7 @@ public class ChessBoard implements Serializable
 			}
 			else
 			{
-				nextBoards.add(newBoard);				
+				nextBoards.add(newBoard);
 			}
 		}
 		return nextBoards;
@@ -471,7 +474,7 @@ public class ChessBoard implements Serializable
 	{
 		StringBuilder sb = new StringBuilder();
 		sb.append("  a b c d e f g h\n");
-		sb.append("  ---------------\n");
+		//sb.append("  ---------------\n");
 		for (int i = 7; i >= 0; i--)
 		{
 			sb.append(i + 1);
@@ -493,7 +496,7 @@ public class ChessBoard implements Serializable
 			sb.append(i + 1);
 			sb.append("\n");
 		}
-		sb.append("  ---------------\n");
+		//sb.append("  ---------------\n");
 		sb.append("  a b c d e f g h\n");
 		sb.append("game state: ");
 		sb.append(gameState);

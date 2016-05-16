@@ -5,8 +5,8 @@ import chessnut.logic.*;
 
 public class Pawn extends Piece
 {
-	private static final long serialVersionUID = 2758435245622732188L;  //!< Egyedi magicnumber a sorosításhoz
-	
+	private static final long serialVersionUID = 2758435245622732188L; //!< Egyedi magicnumber a sorosításhoz
+
 	public Pawn(PlayerColor color)
 	{
 		super(color);
@@ -28,26 +28,35 @@ public class Pawn extends Piece
 		int file = pos.getFile();
 
 		Position currPos = Position.tryCreate(rank + pawnDir, file);
-		Piece currPiece = currPos != null ? board.getPiece(currPos) : null;
-		if (currPiece == null)
+		if (currPos != null) //still on board
 		{
-			moves.add(new Move(pos, currPos)); //step 1 forward
+			Piece currPiece = board.getPiece(currPos);
+			if (currPiece == null) //no piece in front
+			{
+				moves.add(new Move(pos, currPos)); //step 1 forward
 
-			currPos = Position.tryCreate(rank + 2 * pawnDir, file);
-			currPiece = currPos != null ? board.getPiece(currPos) : null;
-			if (pos.getRank() == initRank && currPiece == null)
-				moves.add(new Move(pos, currPos)); //initial step 2 forward
+				currPos = Position.tryCreate(rank + 2 * pawnDir, file);
+				currPiece = currPos != null ? board.getPiece(currPos) : null;
+				if (pos.getRank() == initRank && currPiece == null)
+					moves.add(new Move(pos, currPos)); //initial step 2 forward
+			}
 		}
 
 		currPos = Position.tryCreate(rank + pawnDir, file + 1);
-		currPiece = currPos != null ? board.getPiece(currPos) : null;
-		if (currPiece != null && currPiece.color != color)
-			moves.add(new Move(pos, currPos)); //capture piece
+		if (currPos != null) //still on board
+		{
+			Piece currPiece = board.getPiece(currPos);
+			if (currPiece != null && currPiece.color != color)
+				moves.add(new Move(pos, currPos)); //capture piece
+		}
 
 		currPos = Position.tryCreate(rank + pawnDir, file - 1);
-		currPiece = currPos != null ? board.getPiece(currPos) : null;
-		if (currPiece != null && currPiece.color != color)
-			moves.add(new Move(pos, currPos)); //capture piece
+		if (currPos != null) //still on board
+		{
+			Piece currPiece = board.getPiece(currPos);
+			if (currPiece != null && currPiece.color != color)
+				moves.add(new Move(pos, currPos)); //capture piece
+		}
 
 		return moves;
 	}
