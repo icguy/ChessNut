@@ -107,7 +107,6 @@ public class GameLogic implements ILogic
 			{
 				// Kiküldöm a másiknak is a highlight-olatlan táblát
 				SendChessboardToOne(chessboard.getNextToMove());
-				playerMakesMoveNow = chessboard.getNextToMove();
 			}
 		}
 		else // Ha nem volt sikeres lépés

@@ -10,12 +10,12 @@ import chessnut.logic.ChessBoard;
 
 public class setChessboardMess extends ChessnutOverIP
 {
-	private static final long serialVersionUID = 5266901295622776148L;  //!< Egyedi magicnumber a sorosításhoz
+	private static final long serialVersionUID = 6439012656220161412L;  //!< Egyedi magicnumber a sorosításhoz
 	public ChessBoard chessboard;     //!< Küldött sakktábla
 	
 	//! \brief  Üzenet létrehozó konstruktor
 	public setChessboardMess(ChessBoard chessboard)
 	{
-		this.chessboard = chessboard;
+		this.chessboard = new ChessBoard( chessboard);
 	}
 }

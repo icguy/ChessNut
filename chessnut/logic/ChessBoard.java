@@ -10,7 +10,7 @@ import chessnut.logic.pieces.*;
  */
 public class ChessBoard implements Serializable
 {
-	private static final long serialVersionUID = 1532472295622732188L; //!< Egyedi magicnumber a sorositashoz
+	private static final long serialVersionUID = 1532472298888732188L; //!< Egyedi magicnumber a sorositashoz
 
 	private SelectionType[][] selection;
 	private Piece[][] board;
@@ -30,6 +30,43 @@ public class ChessBoard implements Serializable
 		initBoard();
 		updateKingPos();
 		updateGameState();
+	}
+	
+	
+	//! \brief  Copy konstruktor a hálózaton átküldéshez
+	//! \note   Nem mindent másol át, csak ami a túloldalt is lényeges
+	public ChessBoard(ChessBoard chessboard)
+	{
+		try
+		{
+			this.selection = new SelectionType[8][8];
+			for(int i = 0; i < 8; i++)
+			{
+				for(int j = 0; j < 8; j++)
+				{
+					this.selection[i][j] = chessboard.selection[i][j];
+				}
+			}
+			this.board = new Piece[8][8];
+			for(int i = 0; i < 8; i++)
+			{
+				for(int j = 0; j < 8; j++)
+				{
+					this.board[i][j] = chessboard.board[i][j];
+				}
+			}
+	
+			this.nextMove = chessboard.nextMove;
+			this.allPossibleMoves = null;
+			this.blackKingPos = null;
+			this.whiteKingPos = null;
+			this.awaitingPromotion = chessboard.awaitingPromotion;
+			this.promotionPos = chessboard.promotionPos;
+			this.gameState = chessboard.gameState;
+		}catch(Exception e)
+		{
+			System.err.println("Error at Chessboard copy constructor: " + e.getMessage());
+		}
 	}
 
 	public ChessBoard(Piece[][] board, PlayerColor nextMove)
@@ -515,7 +552,7 @@ public class ChessBoard implements Serializable
 		return new ChessBoard(board, nextMove);
 	}
 
-	public static Piece[][] cloneTable(Piece[][] table)
+	public Piece[][] cloneTable(Piece[][] table)
 	{
 		Piece[][] newtable = new Piece[table.length][];
 		for (int i = 0; i < newtable.length; i++)

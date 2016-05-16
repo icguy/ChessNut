@@ -51,7 +51,7 @@ public class GUI extends JFrame implements IPlayer
 				if( !gameStarted )
 				{
 					Main.setupServer();  // Szerver setup
-					myPlayerColor = PlayerColor.White; // Színem
+					myPlayerColor = PlayerColor.White;
 					gameStarted = true;
 				}
 			}

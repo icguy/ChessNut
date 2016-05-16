@@ -26,7 +26,7 @@ public class ConsolePlayerInterface implements IPlayer
 	public ConsolePlayerInterface(ILogic logic)
 	{
 		this.logic = logic;
-		myPlayerColor = (logic instanceof GameLogic) ? PlayerColor.White : PlayerColor.Black;		
+		myPlayerColor = (logic instanceof GameLogic) ? PlayerColor.White : PlayerColor.Black;
 	}
 	
 	//! \brief  Lépés bekérése thread
@@ -180,6 +180,6 @@ public class ConsolePlayerInterface implements IPlayer
 	public void setGameLogic(ILogic logic)
 	{
 		this.logic = logic;
-		myPlayerColor = (logic instanceof GameLogic) ? PlayerColor.White : PlayerColor.Black;	
+		myPlayerColor = (logic instanceof GameLogic) ? PlayerColor.White : PlayerColor.Black;
 	}
 } 
