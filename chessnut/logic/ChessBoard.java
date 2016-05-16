@@ -495,8 +495,13 @@ public class ChessBoard implements Serializable
 		}
 		sb.append("  ---------------\n");
 		sb.append("  a b c d e f g h\n");
+		sb.append("game state: ");
+		sb.append(gameState);
+		sb.append("\n");
+		sb.append(awaitingPromotion ? "awaiting promotion\n" : "");
 		sb.append(nextMove == PlayerColor.White ? "white" : "black");
-		sb.append(" to move\n");
+		sb.append(" to move");
+		sb.append(isInCheck() ? ", in check\n" : "\n");
 		return sb.toString();
 	}
 
