@@ -18,6 +18,7 @@ import java.net.Socket;
 import chessnut.ILogic;
 import chessnut.IPlayer;
 import chessnut.logic.ChessBoard;
+import chessnut.logic.PlayerColor;
 import chessnut.logic.Position;
 import chessnut.network.protocol.ChessnutOverIP;
 import chessnut.network.protocol.clickMess;
@@ -115,7 +116,7 @@ public class NetworkServer extends Network implements IPlayer
 						// Továbbadom a kezelõnek
 						if(gameLogic != null)
 						{
-							gameLogic.click(((clickMess)received).position);
+							gameLogic.click(((clickMess)received).position, PlayerColor.Black);
 						}
 					}
 					

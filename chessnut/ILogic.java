@@ -12,7 +12,7 @@ import chessnut.logic.pieces.Piece;
 public interface ILogic
 {
 	/* Ezeket a függvényeket kell mindenkinek magának implementálnia */
-	void click(Position position);                    //!<  Player/AI általi kattintás ezen jut fel a logikához
+	void click(Position position, PlayerColor player);                    //!<  Player/AI általi kattintás ezen jut fel a logikához
 	void promote(Piece piece);                        //!<  Player/AI általi gyalogváltás ezen jut fel a logikához
 	public abstract void setPlayer( IPlayer player ); //!<  IPlayer interfészû elemre referencia beállítása
 }

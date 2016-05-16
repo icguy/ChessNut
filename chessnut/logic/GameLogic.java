@@ -44,7 +44,7 @@ public class GameLogic implements ILogic
 	
 	//! \brief  Click kezelése
 	@Override
-	public void click(Position position)
+	public void click(Position position, PlayerColor player)
 	{
 		System.out.println("GameLogic handles click.");
 		

@@ -15,6 +15,7 @@ import java.net.*;
 //Projekt specifikus importok
 import chessnut.ILogic;
 import chessnut.IPlayer;
+import chessnut.logic.PlayerColor;
 import chessnut.logic.Position;
 import chessnut.logic.pieces.Piece;
 import chessnut.network.protocol.ChessnutOverIP;
@@ -183,7 +184,7 @@ public class NetworkClient extends Network implements ILogic
 	
 	//! \brief  Click átküldése
 	@Override
-	public void click(Position position)
+	public void click(Position position, PlayerColor player)
 	{
 		ChessnutOverIP msg = new clickMess(position);
 		System.out.println("Sending click: \n" + ((clickMess) msg).position);
