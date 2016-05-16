@@ -145,18 +145,10 @@ public class GameLogic implements ILogic
 		// Ha sikeres promóció történt
 		if (chessboard.Promote(piece))
 		{
-			// Kiküldöm a gyalogváltott játékosnak még highlight-olva
-			SendChessboardToOne(playerMakesMoveNow);
-			
-			// Törlöm az összes highlight-ot
-			/*
-			 * TODO {Chessboard} - osszes highlight-ot törlõ függvény
-			 */
-			
-			// Kiküldöm a másik oldalnak a táblát highlight nélkül
-			SendChessboardToOne(chessboard.getNextToMove());
+			chessboard.clearHighlightSelection();			
+			sendChessboardToBoth();
 		}
-		// Ha nem sikerült, kiküldöm újra a kérést a gyalogváltásra
+		else // Ha nem sikerült, kiküldöm újra a kérést a gyalogváltásra
 		{
 			System.out.println("Promotion not successful.");
 			sendNotifyPromotionToOne(chessboard.getNextToMove());
