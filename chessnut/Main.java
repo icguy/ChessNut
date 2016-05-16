@@ -7,6 +7,7 @@
 package chessnut;
 
 import chessnut.ai.AI;
+import chessnut.debug.DebugInterface;
 import chessnut.gui.*;
 import chessnut.logic.*;
 import chessnut.network.*;
