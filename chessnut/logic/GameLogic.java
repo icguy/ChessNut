@@ -23,8 +23,7 @@ public class GameLogic implements ILogic
 	private boolean gameStarted = false;        //!< Azzal kezdõdik a játék, hogy az induló táblákat kiküldtem
 	
 	private PlayerColor playerMakesMoveNow;     //!< Aki most kattintgat. Ezt azért kell itt is megjegyeznem, mert a lépés után a chessboard-ban már át fog állni, és így nem tudnám, hogy kinek kell visszaküldeni 
-	private boolean playerClickedFirst = false; //!< Játékos elsõ kattintása megvolt
-	private Position currentMoveStart;          //!< Folyamatban lévõ lépés kezdete
+	private Position currentMoveStart = null;          //!< Folyamatban lévõ lépés kezdete. null, ha nincs semmi kijelölve
 	
 	
 	//! \brief  Létrehozás GUI alapján
@@ -67,7 +66,7 @@ public class GameLogic implements ILogic
 		}
 		
 		// Elsõ kattintása jön:
-		if( this.playerClickedFirst == false )
+		if( currentMoveStart == null )
 		{
 			// Elmentem a lépés kiinduló mezõjét
 			currentMoveStart = position;
@@ -83,7 +82,6 @@ public class GameLogic implements ILogic
 			
 			// Elsõ kattintás sikeresen megvolt, várom a másodikat
 			playerMakesMoveNow = chessboard.getNextToMove();
-			playerClickedFirst = true;
 		}
 		// Második kattintása jön:
 		{
@@ -126,7 +124,7 @@ public class GameLogic implements ILogic
 			}
 			
 			// Újrakezdem a folyamatot
-			this.playerClickedFirst = false;
+			currentMoveStart = null;
 		}
 		
 		
