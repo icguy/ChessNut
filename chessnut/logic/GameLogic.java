@@ -111,7 +111,6 @@ public class GameLogic implements ILogic
 			if(chessboard.isAwaitingPromotion())
 			{
 				sendNotifyPromotionToOne(playerMakesMoveNow);
-				return; // És haza is megyek, mert nincs mit kiküldeni, ameddig ez le nem zajlott.
 			}
 			else
 			{
