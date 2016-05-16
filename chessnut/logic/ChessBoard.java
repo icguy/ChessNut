@@ -346,6 +346,37 @@ public class ChessBoard implements Serializable
 		return newChessBoard.isInCheck();
 	}
 
+	public ArrayList<ChessBoard> getPossibleNextBoards()
+	{
+		ArrayList<ChessBoard> nextBoards = new ArrayList<>();
+		getAllPossibleNextMoves();
+		for (Move move : allPossibleMoves)
+		{
+			ChessBoard newBoard = this.clone();
+			newBoard.makeMove(move);
+			if (newBoard.isAwaitingPromotion())
+			{
+				ChessBoard b1 = newBoard.clone();
+				b1.Promote(new Rook(nextMove));
+				ChessBoard b2 = newBoard.clone();
+				b2.Promote(new Knight(nextMove));
+				ChessBoard b3 = newBoard.clone();
+				b3.Promote(new Bishop(nextMove));
+				ChessBoard b4 = newBoard.clone();
+				b4.Promote(new Queen(nextMove));
+				nextBoards.add(b1);
+				nextBoards.add(b2);
+				nextBoards.add(b3);
+				nextBoards.add(b4);
+			}
+			else
+			{
+				nextBoards.add(newBoard);				
+			}
+		}
+		return nextBoards;
+	}
+
 	public ArrayList<Move> getAllPossibleNextMoves()
 	{
 		if (allPossibleMoves != null)
@@ -423,7 +454,7 @@ public class ChessBoard implements Serializable
 	{
 		return gameState;
 	}
-	
+
 	public PlayerColor getNextToMove()
 	{
 		return this.nextMove;
