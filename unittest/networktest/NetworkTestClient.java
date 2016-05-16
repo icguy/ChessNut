@@ -49,7 +49,7 @@ public class NetworkTestClient extends NetworkTest
 	public void start()
 	{
 		// Beállítom kliensnek a main kliensoldali hálózatát, mert azt tesztelem
-		client = Main.Logic; // PIG a végleges verzióban kikommentezni ezt a sort
+		//client = Main.Logic;
 		
 		// Teszt futtatása külön thread-ben
 		Thread testClientThread = new Thread(new ClientTestRunnable());

@@ -78,7 +78,6 @@ public class NetworkClient extends Network implements ILogic
 					// Ha setChessboard üzenet jött
 					if(received instanceof setChessboardMess )  //.msgType == IPlayerMsgType.setChessboard)
 					{
-						System.out.println("setChessboard message arrived: \n" + ((setChessboardMess)received).chessboard );
 						// Meghívom a kezelõt:
 						if(gui != null)
 						{
@@ -88,7 +87,6 @@ public class NetworkClient extends Network implements ILogic
 					// Ha notifyPromotion jött
 					else if(received instanceof notifyPromotionMess)
 					{
-						System.out.println("notifyPromotion message arrived: \n" + ((notifyPromotionMess)received).position );
 						// Meghívom a kezelõt
 						if(gui != null)
 						{
@@ -187,7 +185,6 @@ public class NetworkClient extends Network implements ILogic
 	public void click(Position position, PlayerColor player)
 	{
 		ChessnutOverIP msg = new clickMess(position, player);
-		System.out.println("Sending click: \n" + ((clickMess) msg).position);
 		sendMsgToServer(msg);
 	}
 	
@@ -196,7 +193,6 @@ public class NetworkClient extends Network implements ILogic
 	public void promote(Piece piece)
 	{
 		ChessnutOverIP msg = new promoteMess(piece);
-		System.out.println("Sending promote: \n" + ((promoteMess) msg).piece);
 		sendMsgToServer(msg);
 	}
 	

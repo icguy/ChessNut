@@ -111,7 +111,6 @@ public class NetworkServer extends Network implements IPlayer
 					// Ha click üzenet
 					if(received instanceof clickMess)
 					{
-						System.out.println("click message arrived: \n" + ((clickMess)received).position );
 						// Továbbadom a kezelõnek
 						if(gameLogic != null)
 						{
@@ -123,7 +122,6 @@ public class NetworkServer extends Network implements IPlayer
 					// Ha promote üzenet
 					else if(received instanceof promoteMess)
 					{
-						System.out.println("promote message arrived: \n" + ((promoteMess)received).piece );
 						// Továbbadom a kezelõnek
 						if(gameLogic != null)
 						{
@@ -219,7 +217,6 @@ public class NetworkServer extends Network implements IPlayer
 	public void setChessboard(ChessBoard chessboard)
 	{
 		ChessnutOverIP msg = new setChessboardMess(chessboard);
-		System.out.println("Sending setChessboard: \n" + ((setChessboardMess) msg).chessboard);
 		sendMsgToClient(msg);
 	}
 	
@@ -228,7 +225,6 @@ public class NetworkServer extends Network implements IPlayer
 	public void notifyPromotion(Position position)
 	{
 		ChessnutOverIP msg = new notifyPromotionMess(position);
-		System.out.println("Sending notifyPromotion: \n" + ((notifyPromotionMess) msg).position);
 		sendMsgToClient(msg);
 	}
 	
