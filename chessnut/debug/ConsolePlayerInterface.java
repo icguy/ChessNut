@@ -16,11 +16,17 @@ import chessnut.logic.pieces.*;
 
 public class ConsolePlayerInterface implements IPlayer
 {
-	ILogic logic;               //!< Játéklogika elérése
-	PlayerColor myPlayerColor;  //!< Színem
+	ILogic logic = null;                   //!< Játéklogika elérése
+	PlayerColor myPlayerColor = null;      //!< Színem
+	boolean isPromotionOn = false;         //!< Lesz-e mostanában promotion?
 	
 	//! \brief  Default konstruktor
-	public ConsolePlayerInterface(){}
+	public ConsolePlayerInterface()
+	{
+		// Thread nyitása
+		Thread playerInputThread = new Thread(new PlayerInputThread());
+		playerInputThread.start();
+	}
 	
 	//! \brief  Konstruktor
 	public ConsolePlayerInterface(ILogic logic)
@@ -29,8 +35,19 @@ public class ConsolePlayerInterface implements IPlayer
 		myPlayerColor = (logic instanceof GameLogic) ? PlayerColor.White : PlayerColor.Black;
 	}
 	
-	//! \brief  Lépés bekérése thread
-	private class PlayerAskForClickThread implements Runnable
+	//! \brief  GameLogic referencia beállítása
+	@Override
+	public void setGameLogic(ILogic logic)
+	{
+		this.logic = logic;
+		myPlayerColor = (logic instanceof GameLogic)
+				? PlayerColor.White
+				: PlayerColor.Black;
+	}
+	
+	
+	//! \brief  Felhasználói input thread
+	private class PlayerInputThread implements Runnable
 	{
 		@Override
 		public void run()
@@ -40,21 +57,33 @@ public class ConsolePlayerInterface implements IPlayer
 
 			try
 			{
-				while (s == null)
+				while (true)
 				{
 					// Felhasználó itt ír be:
-					System.out.println("You click now:");
 					s = reader.readLine();
 					if (s.equals("quit"))
 					{
 						System.exit(0);
 					}
 
-					// Ha baromságot írt be, megy tovább a ciklus
-					if(!handleClick(s))
+					// Ha van logic, ami fogadja a beavatkozást
+					if(logic != null)
 					{
-						System.out.println("Invalid click, try again...");
-						s = null;
+						// Rendes lépést várok
+						if(isPromotionOn == false)
+						{
+							if(!handleClick(s))
+							{
+								System.out.println("Invalid click, try again...");
+							}
+						}
+						else
+						{
+							if(!handlePromote(s))
+							{
+								System.out.println("Invalid promotion, try again...");
+							}
+						}
 					}
 				}
 			} catch (Exception e)
@@ -64,42 +93,8 @@ public class ConsolePlayerInterface implements IPlayer
 		}
 	}
 	
-	// ! \brief Promóció kérése thread
-	private class PlayerAskForPromoteThread implements Runnable
-	{
-		@Override
-		public void run()
-		{
-			BufferedReader reader = new BufferedReader(new InputStreamReader(System.in));
-			String s = null;
-
-			try
-			{
-				while (s == null)
-				{
-					// Felhasználó itt ír be:
-					System.out.println("You promote now:");
-					s = reader.readLine();
-					if (s.equals("quit"))
-					{
-						System.exit(0);
-					}
-
-					// Ha baromságot írt be, megy tovább a ciklus
-					if(!handlePromote(s))
-					{
-						System.out.println("Invalid promotion, try again...");
-						s = null;
-					}
-				}
-			} catch (Exception e)
-			{
-				System.err.println(e.getMessage());
-			}
-		}
-	}
 	
-
+	//! \brief  Promote inputot kezeli
 	public boolean handlePromote(String s)
 	{
 		Piece piece = null;
@@ -129,9 +124,13 @@ public class ConsolePlayerInterface implements IPlayer
 		
 		logic.promote(piece);
 		
+		isPromotionOn = false;
+		
 		return true;
 	}
 
+	
+	//! \brief  Click inputot kezeli
 	private boolean handleClick(String s)
 	{		
 		if(s.length() != 2)
@@ -150,7 +149,7 @@ public class ConsolePlayerInterface implements IPlayer
 	}
 	
 	
-	// Interfész függvényei
+	//! \brief  Beérkezõ sakktábla kezelése
 	@Override
 	public void setChessboard(ChessBoard chessboard)
 	{
@@ -160,26 +159,19 @@ public class ConsolePlayerInterface implements IPlayer
 		{
 			if( !(chessboard.isAwaitingPromotion()) )
 			{
-				Thread clickthread = new Thread(new PlayerAskForClickThread());
-				clickthread.start();
+				System.out.println("You click now:");
 			}
 		}
 		
 	}
 	
 	
+	//! \brief  Beérkezõ promóció kérés kezelése
 	@Override
 	public void notifyPromotion(Position position)
 	{
-		Thread promotethread = new Thread(new PlayerAskForPromoteThread());
-		promotethread.start();
-	}
-	
-	
-	@Override
-	public void setGameLogic(ILogic logic)
-	{
-		this.logic = logic;
-		myPlayerColor = (logic instanceof GameLogic) ? PlayerColor.White : PlayerColor.Black;
+		System.out.println("You promote now:");
+		
+		isPromotionOn = true;
 	}
 } 

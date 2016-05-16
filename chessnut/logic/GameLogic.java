@@ -42,17 +42,19 @@ public class GameLogic implements ILogic
 	@Override
 	public void click(Position position, PlayerColor player)
 	{
-		System.out.println("GameLogic handles click.");
-
+		System.out.println("GameLogic handles " + player.toString() + " player's click: " + position);
+		
 		// Ha most nem lépést várok, hanem promóciót, akkor hazamegyek
 		if(chessboard.isAwaitingPromotion() == true)
 		{
+			System.out.println("Click not accepted: promotion is in progress.");
 			return;
 		}
 
 		// Ha nem õ jön, akkor minek kattintgat?
 		if(chessboard.getNextToMove() != player)
 		{
+			System.out.println("Click not accepted: It's not the player's turn.");
 			return;
 		}
 
@@ -69,9 +71,17 @@ public class GameLogic implements ILogic
 
 	private void firstClick(Position position)
 	{
+		// Ha olyan helyre kattintott, ahol nincs is bábu
+		if(chessboard.getPiece(position) == null)
+		{
+			System.out.println("Click not accepted: no chesspiece");
+			return;
+		}
+		
 		// Ha nem a saját színére kattintott, akkor nem foglalkozok vele
 		if(chessboard.getPiece(position).getColor() != chessboard.getNextToMove())
 		{
+			System.out.println("Click not accepted: selected piece is not his color.");
 			return;
 		}
 
@@ -114,6 +124,7 @@ public class GameLogic implements ILogic
 			chessboard.clearHighlightSelection();
 
 			// Kiküldöm újra a játékosnak a táblát
+			System.out.println("Invalid move! Try again.");
 			SendChessboardToOne(chessboard.getNextToMove());
 		}
 
