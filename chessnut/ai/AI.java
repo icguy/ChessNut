@@ -12,6 +12,8 @@ import chessnut.ILogic;
 import chessnut.IPlayer;
 import chessnut.logic.ChessBoard;
 import chessnut.logic.Position;
+import chessnut.logic.pieces.Piece;
+import chessnut.logic.pieces.Queen;
 import chessnut.logic.PlayerColor;
 import chessnut.logic.Move;
 
@@ -21,12 +23,22 @@ public class AI implements IPlayer
 	int iterations;
 	Move moveAI;
 	boolean firstStep;
+	ChessBoard ownChessboard;
 	
 	//! \brief  Konstruktor: létrehozható gameLogic alapján
 	public AI(ILogic logic)
 	{
 		this.gameLogic = logic;
 	}
+	
+	//! \brief  Ezzel beállítható a gamelogic referencia
+	@Override
+	public void setGameLogic(ILogic logic)
+	{
+		this.gameLogic = logic;
+	}
+		
+	
 	private int alphaBeta(Move moves, ChessBoard board, int depth, int alpha, int beta)
 	{
 		int value = 0;
@@ -110,8 +122,6 @@ public class AI implements IPlayer
 		int valueMobility = 0;
 		int valueMaterial = 0;
 		int value = 0;
-		int i=0;
-		int j=0;
 		String tempChar = "";
 		//Piece tempPiece = new Piece()
 		Position pos = new Position(0,0);
@@ -204,12 +214,6 @@ public class AI implements IPlayer
 		value = valueMobility + 10*valueMaterial;
 		return value;
 	}
-	//! \brief  Ezzel beállítható a gamelogic referencia
-	@Override
-	public void setGameLogic(ILogic logic)
-	{
-		this.gameLogic = logic;
-	}
 	
 	
 	//! \brief  Sakktáblát kaptam
@@ -217,75 +221,47 @@ public class AI implements IPlayer
 	public void setChessboard(ChessBoard chessboard)
 	{
 		System.out.println("AI handles setChessboard.");
-		
-		// TODO {AI} Ide kell megírni a kapott sakktáblára reakciót
-		int value;
-		Position firstClick = new Position(6,0);
-		Position secondClick = new Position(0,0);
-		Move moves = new Move(firstClick, secondClick);//(firstClick, secondClick);
-		//moves.Move;
-		/*
-		 * Valami ilyesmi, hogy:
-		 * 
-		 * Megnézem, hogy én jövök-e
-		 * {
-		 * 		Ha én jövök, megnézem, hogy ez most az elsõ kattintásom lesz, vagy a második
-		 *  	Ha az elsõ kattintásom lesz
-		 *  	{
-		 */  		//végig kell menni a játékosaimon
-					//moves.
-			try {
-			    Thread.sleep(1000);                 //1000 milliseconds is one second.
-			} catch(InterruptedException ex) {
-			    Thread.currentThread().interrupt();
-			}
-			if(chessboard.getNextToMove() == PlayerColor.Black && iterations == 0 )
-			{
-				
-				//if(chessboard.)
-				System.out.println("AI started");
-				//gameLogic.
-				//gameLogic.click(firstClick, PlayerColor.Black);
-				//
-			
-				
+		ownChessboard = chessboard;
+		Thread aiThread = new Thread(new AiWorkingThread());
+		aiThread.start();
+	}
+	
+	// Ebben a thread-ben fogunk számolgatni
+	private class AiWorkingThread implements Runnable
+	{
+		@Override
+		public void run()
+		{
+			Position firstClick = new Position(6,0);
+			Position secondClick = new Position(0,0);
+			Move moves = new Move(firstClick, secondClick);//(firstClick, secondClick);
+				try {
+				    Thread.sleep(1000);                 //1000 milliseconds is one second.
+				} catch(InterruptedException ex) {
+				    Thread.currentThread().interrupt();
+				}
+				if(ownChessboard.getNextToMove() == PlayerColor.Black && iterations == 0 )
+				{
+					System.out.println("AI started");
 
-				
-				
-				
-				iterations = 0;
-				value = alphaBeta(moves, chessboard, 2, -100, 100);
-				value = 0;
-				this.gameLogic.click(moveAI.getStart(), PlayerColor.Black);
-				
 					
-				
-				System.out.println("AI ended");
-				firstStep = false;
-			} else if (chessboard.getNextToMove() == PlayerColor.Black && iterations >0)
-			{
-				this.gameLogic.click(moveAI.getEnd(), PlayerColor.Black);
-				
-				iterations = 0;
-				firstStep = true;
-			}
-		
-		
-		
-		
-		
-		 /*  		
-		 *  		
-		 *  		valahogy kiszámolom az optimális lépést, (ami igazából maga az AI feladat)
-		 *  		aztán megkattintom az elsõt (a kiinduló mezõt)
-		 *  	}
-		 *  	Ha a második kattintásom lesz
-		 *  	{
-		 *  		Megkattintom a második kattintást az elõzõleg kiszámolt lépés alapján
-		 *  	}
-		 * }
-		 */
-		
+					
+					iterations = 0;
+					alphaBeta(moves, ownChessboard, 2, -100, 100);
+					gameLogic.click(moveAI.getStart(), PlayerColor.Black);
+					
+						
+					
+					System.out.println("AI ended");
+					firstStep = false;
+				} else if (ownChessboard.getNextToMove() == PlayerColor.Black && iterations >0)
+				{
+					gameLogic.click(moveAI.getEnd(), PlayerColor.Black);
+					
+					iterations = 0;
+					firstStep = true;
+				}
+		}
 	}
 	
 	
@@ -294,8 +270,7 @@ public class AI implements IPlayer
 	public void notifyPromotion(Position position)
 	{
 		 System.out.println("AI handles notifyPromotion.");
-		 
-		// TODO {AI} Paraszt elõléptetést megcsinálni
-		
+		 Piece piece = new Queen(PlayerColor.Black);
+		 gameLogic.promote(piece);
 	}
 }

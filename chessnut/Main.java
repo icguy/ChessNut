@@ -12,7 +12,7 @@ import chessnut.logic.*;
 import chessnut.network.*;
 
 //PIG Konzolos UI, késõbb kivenni
-import chessnut.debug.*;
+//import chessnut.debug.*;
 
 //! \brief  Program fõ osztálya
 public class Main

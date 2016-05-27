@@ -8,14 +8,8 @@ package chessnut.gui;
 
 import java.awt.Graphics;
 import java.awt.Color;
-import java.awt.Graphics2D;
-import java.awt.GridLayout;
-import java.awt.Rectangle;
 import java.awt.event.*;
-import java.awt.geom.Line2D;
 import java.awt.image.BufferedImage;
-import java.io.FileInputStream;
-import java.util.ArrayList;
 
 import javax.imageio.ImageIO;
 import javax.swing.*;
@@ -24,10 +18,9 @@ import chessnut.ILogic;
 import chessnut.IPlayer;
 import chessnut.Main;
 import chessnut.logic.ChessBoard;
-import chessnut.logic.Move;
 import chessnut.logic.PlayerColor;
 import chessnut.logic.Position;
-import chessnut.logic.pieces.Piece;
+import chessnut.logic.pieces.*;
 
 
 //! \brief  GUI fõ osztály
@@ -235,7 +228,7 @@ public class GUI extends JFrame implements IPlayer
 	public void notifyPromotion(Position position)
 	{
 		System.out.println("GUI handles notifyPromotion.");
-
+		Piece piece=null;
 
 		PromotionDialog promDialog = new PromotionDialog();
 		String Chosen = null;
@@ -247,14 +240,29 @@ public class GUI extends JFrame implements IPlayer
 		promDialog.dispose();
 		promDialog = null;	
 		
-		//logic.promote(piece);
-
+		if (Chosen=="Bishop")
+		{
+			piece=new Bishop(myPlayerColor);
+		}
+		else if (Chosen=="Knight")
+		{
+			piece= new Knight(myPlayerColor);
+		}
+		else if (Chosen=="Queen")
+		{
+			piece= new Queen(myPlayerColor);
+		}
+		else if (Chosen=="Rook")
+		{
+			piece= new Rook(myPlayerColor);
+		}
 		
+		logic.promote(piece);
+
 	}
 	
 	public void paint(Graphics g) {
         super.paint(g);  // fixes the immediate problem.
-        Graphics2D g2 = (Graphics2D) g;
         
         Color darkBrown = new Color(139, 69, 19);
 		Color lightBrown = new Color(232, 194, 145);
