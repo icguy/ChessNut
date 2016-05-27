@@ -15,6 +15,7 @@ import java.awt.event.*;
 import java.awt.geom.Line2D;
 import java.awt.image.BufferedImage;
 import java.io.FileInputStream;
+import java.util.ArrayList;
 
 import javax.imageio.ImageIO;
 import javax.swing.*;
@@ -23,6 +24,7 @@ import chessnut.ILogic;
 import chessnut.IPlayer;
 import chessnut.Main;
 import chessnut.logic.ChessBoard;
+import chessnut.logic.Move;
 import chessnut.logic.PlayerColor;
 import chessnut.logic.Position;
 import chessnut.logic.pieces.Piece;
@@ -135,38 +137,42 @@ public class GUI extends JFrame implements IPlayer
 			}
 		});
 		menuBar.add(menuItem);
+		
 
 		setJMenuBar(menuBar);
 
 		
-		
-    // TODO {GUI} Ilyennel kell majd a kattintást vizsgálni
-		/*
-		 * Csinálni kell ilyenbõl egy akkorát, ami a sakktábla képét lefedi.
-		 * Az ezen beérkezett kattintást megkapjuk itt ennek a mouseListenerjében:
-		 */
-	//	JPanel inputPanel = new JPanel();
-	//	inputPanel.setBounds(30, 30, 200, 200);
-	//	inputPanel.setBorder(BorderFactory.createTitledBorder("Input"));
-	//	inputPanel.addMouseListener(new MouseAdapter()
-	//	{
-	//
-	//		@Override
-	//		public void mousePressed(MouseEvent e)
-	//		{
-	//			System.out.println("X:" + e.getX() + " Y:" + e.getY());
-	//			/*
-	//			 * Itt ha megvannak a kattintott koordináták,
-	//			 * Ezeket át kell számolni Position-re,
-	//			 * és oda kell adni a logic-nak a click-et.
-	//			 * 
-	//			 */
-	//
-	//		}
-	//	});
-	//	add(inputPanel);
-		
+		addMouseListener(new MouseAdapter()
+		{
+		     @Override
+		     public void mousePressed(MouseEvent e) {
+		        System.out.println("X" + e.getX() + " Y" + e.getY() );
+		        
+		        int width=getContentPane().getWidth();
+				int height=getContentPane().getHeight();
+				int clickX=e.getX();
+				int clickY=e.getY();
+				int yOffset = getHeight() - getContentPane().getHeight();
+				clickY=clickY - yOffset;
 
+
+				int size;
+
+				if ( width <=height)
+				{
+					size=width/8;
+				}
+				else
+					size=height/8;
+				
+		        int posX=clickX/size;
+		        int posY=clickY/size;
+		        
+		        
+		        logic.click(new Position(7-posY, posX), myPlayerColor);
+		     }
+		 });
+		
 		try {
 			BBishop = ImageIO.read(getClass().getResource(("pictures\\BBishop.png")));
 			BKing = ImageIO.read(getClass().getResource(("pictures\\BKing.png")));
@@ -184,7 +190,6 @@ public class GUI extends JFrame implements IPlayer
 		{
 			System.out.println("File not found: " + ex.getMessage());
 		}
-
 		
 		
 		setVisible(true);               // Láthatóvá teszem az ablakot
@@ -220,7 +225,6 @@ public class GUI extends JFrame implements IPlayer
 		}*/
 		repaint();
 		
-		
 		setVisible(true);
 		
 	}
@@ -231,13 +235,20 @@ public class GUI extends JFrame implements IPlayer
 	public void notifyPromotion(Position position)
 	{
 		System.out.println("GUI handles notifyPromotion.");
+
+
+		PromotionDialog promDialog = new PromotionDialog();
+		String Chosen = null;
+		while ( Chosen == null )
+		{
+			Chosen = promDialog.getChosenOne();
+		}
+		System.out.println("Valasz: " + Chosen);
+		promDialog.dispose();
+		promDialog = null;	
 		
-		// TODO {GUI} Gyalogváltás kérelem lekezelése.
-		
-		/*
-		 * Ehhez kell valamilyen másik felület, amit ilyenkor feldobunk, és nézzük rajta, hogy mire kattint az ember,
-		 * utána azt visszaküldjük
-		 */
+		//logic.promote(piece);
+
 		
 	}
 	
@@ -285,7 +296,6 @@ public class GUI extends JFrame implements IPlayer
 					Piece p = chessBoard.getPiece( new Position(i, j) );
 					if (p != null)
 					{
-						System.out.println("no para");
 						
 						if (p.toString() == "B")
 						{
