@@ -18,6 +18,7 @@ import chessnut.ILogic;
 import chessnut.IPlayer;
 import chessnut.Main;
 import chessnut.logic.ChessBoard;
+import chessnut.logic.ChessBoard.SelectionType;
 import chessnut.logic.PlayerColor;
 import chessnut.logic.Position;
 import chessnut.logic.pieces.*;
@@ -261,14 +262,16 @@ public class GUI extends JFrame implements IPlayer
 
 	}
 	
+	
 	public void paint(Graphics g) {
         super.paint(g);  // fixes the immediate problem.
         
         Color darkBrown = new Color(139, 69, 19);
 		Color lightBrown = new Color(232, 194, 145);
+		Color selectColor1 = new Color((int)(139*1.5), (int)(69*1.5), (int)(19*1.5));
+		Color selectColor2 = new Color((int)(255), (int)(194*1.3), (int)(145*1.5));
+
 		
-		//g.setColor(lightBrown);
-		//g.fillRect(100, 100, 100, 200);
 		int width=getContentPane().getWidth();
 		int height=getContentPane().getHeight();
 		int yOffset = getHeight() - getContentPane().getHeight();
@@ -299,9 +302,21 @@ public class GUI extends JFrame implements IPlayer
 				int x = j * size;
 				g.fillRect( x, y, size, size);
 				
-				if (this.chessBoard != null)
-				{
+				if (this.chessBoard != null) {
 					Piece p = chessBoard.getPiece( new Position(i, j) );
+					if (chessBoard.getSelections() != null) {
+						SelectionType sel = chessBoard.getSelections()[i][j];
+						if (sel != null) {
+							if ((i + j) % 2 == 0) {					
+								g.setColor(selectColor1);
+							} else {
+								g.setColor(selectColor2);
+							}
+							g.fillRect( x, y, size, size);
+						}
+					}
+
+
 					if (p != null)
 					{
 						
@@ -361,7 +376,6 @@ public class GUI extends JFrame implements IPlayer
 			}
 			
 		}
-		
 
 	}
 	
