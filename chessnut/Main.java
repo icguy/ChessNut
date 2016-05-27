@@ -32,37 +32,38 @@ public class Main
 	public static void setupServer()
 	{
 		// Ez a rendes futás
-		//Logic = new GameLogic(GUI);                  // Játéklogikát létrehozom
-		//Opponent  = new NetworkServer(Logic);        // Szerver oldali hálózatot létrehozom
-		//GUI.setGameLogic(Logic);                     // Beállítom a GUI gamelogic-ját
-		//Logic.setPlayer(Opponent);                   // Beállítom a hálózatot ellenfélnek
-		//((NetworkServer) Opponent).connect("localhost"); // Hálózat nyitása
+		Logic = new GameLogic(GUI);                  // Játéklogikát létrehozom
+		Opponent  = new NetworkServer(Logic);        // Szerver oldali hálózatot létrehozom
+		GUI.setGameLogic(Logic);                     // Beállítom a GUI gamelogic-ját
+		Logic.setPlayer(Opponent);                   // Beállítom a hálózatot ellenfélnek
+		((NetworkServer) Opponent).connect("localhost"); // Hálózat nyitása
 		
 		
 		// PIG Konzolos UI-al futás
-		IPlayer ConsoleUI = new ConsolePlayerInterface();
-		Logic = new GameLogic(ConsoleUI);            // Játéklogikát létrehozom
-		Opponent  = new NetworkServer(Logic);        // Szerver oldali hálózatot létrehozom
-		ConsoleUI.setGameLogic(Logic);               // Beállítom a GUI gamelogic-ját
-		Logic.setPlayer(Opponent);                   // Beállítom a hálózatot ellenfélnek
-		((NetworkServer) Opponent).connect("localhost"); // Hálózat nyitása
+		//IPlayer ConsoleUI = new ConsolePlayerInterface();
+		//Logic = new GameLogic(ConsoleUI);            // Játéklogikát létrehozom
+		//Opponent  = new NetworkServer(Logic);        // Szerver oldali hálózatot létrehozom
+		//ConsoleUI.setGameLogic(Logic);               // Beállítom a GUI gamelogic-ját
+		//Logic.setPlayer(Opponent);                   // Beállítom a hálózatot ellenfélnek
+		//((NetworkServer) Opponent).connect("localhost"); // Hálózat nyitása
 	}
 	
 	
 	//! \brief  Kliens oldal felállítása
 	public static void setupClient(String IP)
 	{
-		//Logic = new NetworkClient();                  // Kliens oldali hálózat jelképezi a logikát
-		//Logic.setPlayer(GUI);                         // Az õ játékosa a GUI
-		//GUI.setGameLogic(Logic);                      // GUI logikája a hálózat
-		//((NetworkClient) Logic).connect(IP); // Csatlakozás
+		// Rendes futás
+		Logic = new NetworkClient();                  // Kliens oldali hálózat jelképezi a logikát
+		Logic.setPlayer(GUI);                         // Az õ játékosa a GUI
+		GUI.setGameLogic(Logic);                      // GUI logikája a hálózat
+		((NetworkClient) Logic).connect(IP); // Csatlakozás
 		
 		// PIG Konzolos UI-al futás
-		IPlayer ConsoleUI = new ConsolePlayerInterface();
-		Logic = new NetworkClient();                  // Kliens oldali hálózat jelképezi a logikát
-		Logic.setPlayer(ConsoleUI);                   // Az õ játékosa a GUI
-		ConsoleUI.setGameLogic(Logic);                // GUI logikája a hálózat
-		((NetworkClient) Logic).connect(IP); // Csatlakozás
+		//IPlayer ConsoleUI = new ConsolePlayerInterface();
+		//Logic = new NetworkClient();                  // Kliens oldali hálózat jelképezi a logikát
+		//Logic.setPlayer(ConsoleUI);                   // Az õ játékosa a GUI
+		//ConsoleUI.setGameLogic(Logic);                // GUI logikája a hálózat
+		//((NetworkClient) Logic).connect(IP); // Csatlakozás
 	}
 	
 	//! \brief  SinglePlayer játék felállítása

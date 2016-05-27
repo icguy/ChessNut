@@ -168,31 +168,21 @@ public class GUI extends JFrame implements IPlayer
 		
 
 		try {
-			BBishop = ImageIO
-					.read(new FileInputStream("D:\\BME\\MSC\\1 félév\\Beagyazott szoftech\\Házi\\chessnut\\piece\\BBishop.png"));
-			BKing = ImageIO
-					.read(new FileInputStream("D:\\BME\\MSC\\1 félév\\Beagyazott szoftech\\Házi\\chessnut\\piece\\BKing.png"));
-			BKnight = ImageIO
-					.read(new FileInputStream("D:\\BME\\MSC\\1 félév\\Beagyazott szoftech\\Házi\\chessnut\\piece\\BKnight.png"));
-			BPawn = ImageIO
-					.read(new FileInputStream("D:\\BME\\MSC\\1 félév\\Beagyazott szoftech\\Házi\\chessnut\\piece\\BPawn.png"));
-			BQueen = ImageIO
-					.read(new FileInputStream("D:\\BME\\MSC\\1 félév\\Beagyazott szoftech\\Házi\\chessnut\\piece\\BQueen.png"));
-			BRook = ImageIO
-					.read(new FileInputStream("D:\\BME\\MSC\\1 félév\\Beagyazott szoftech\\Házi\\chessnut\\piece\\BRook.png"));
-			WBishop = ImageIO
-					.read(new FileInputStream("D:\\BME\\MSC\\1 félév\\Beagyazott szoftech\\Házi\\chessnut\\piece\\WBishop.png"));
-			WKing = ImageIO
-					.read(new FileInputStream("D:\\BME\\MSC\\1 félév\\Beagyazott szoftech\\Házi\\chessnut\\piece\\WKing.png"));
-			WKnight = ImageIO
-					.read(new FileInputStream("D:\\BME\\MSC\\1 félév\\Beagyazott szoftech\\Házi\\chessnut\\piece\\WKnight.png"));
-			WPawn = ImageIO
-					.read(new FileInputStream("D:\\BME\\MSC\\1 félév\\Beagyazott szoftech\\Házi\\chessnut\\piece\\WPawn.png"));
-			WQueen = ImageIO
-					.read(new FileInputStream("D:\\BME\\MSC\\1 félév\\Beagyazott szoftech\\Házi\\chessnut\\piece\\WQueen.png"));
-			WRook = ImageIO
-					.read(new FileInputStream("D:\\BME\\MSC\\1 félév\\Beagyazott szoftech\\Házi\\chessnut\\piece\\WRook.png"));
-		} catch (Exception ex) {
+			BBishop = ImageIO.read(getClass().getResource(("pictures\\BBishop.png")));
+			BKing = ImageIO.read(getClass().getResource(("pictures\\BKing.png")));
+			BKnight = ImageIO.read(getClass().getResource(("pictures\\BKnight.png")));
+			BPawn = ImageIO.read(getClass().getResource(("pictures\\BPawn.png")));
+			BQueen = ImageIO.read(getClass().getResource(("pictures\\BQueen.png")));
+			BRook = ImageIO.read(getClass().getResource(("pictures\\BRook.png")));
+			WBishop = ImageIO.read(getClass().getResource(("pictures\\WBishop.png")));
+			WKing = ImageIO.read(getClass().getResource(("pictures\\WKing.png")));
+			WKnight = ImageIO.read(getClass().getResource(("pictures\\WKnight.png")));
+			WPawn = ImageIO.read(getClass().getResource(("pictures\\WPawn.png")));
+			WQueen = ImageIO.read(getClass().getResource(("pictures\\WQueen.png")));
+			WRook = ImageIO.read(getClass().getResource(("pictures\\WRook.png")));
+		} catch (Exception ex)
+		{
+			System.out.println("File not found: " + ex.getMessage());
 		}
 
 		
