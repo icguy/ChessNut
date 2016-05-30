@@ -1,17 +1,18 @@
-/*************************************************
- *  \file     IPlayer.java
- *  \brief    Interfész lefelé, a Player / AI irányába
- *  \note     
- *  \date     2016. máj. 11.
- *************************************************/
 package chessnut;
 
 import chessnut.logic.*;
 
+/**
+ * Ezen az interfészen keresztül érhetõek el a játékos típusú objektumok: GUI és AI
+ */
 public interface IPlayer
 {	
-	/* Ezeket a függvényeket kell mindenkinek magának implementálnia */
-	public abstract void setChessboard(ChessBoard chessboard);     //!<  Ezen tudjuk leküldeni a sakktáblát, annak minden tartozékával együtt
-	public abstract void notifyPromotion(Position position);  //!<  Ezen tudunk gyalogváltás kérést leküldeni
-	public abstract void setGameLogic( ILogic logic);         //!< ILogic interfészû egységre referencia beállítása
+	/**  Ezen tudjuk leküldeni a sakktáblát, annak minden tartozékával együtt   */
+	public abstract void setChessboard(ChessBoard chessboard);   
+	
+	/**  Ezen tudunk gyalogváltás kérést leküldeni   */
+	public abstract void notifyPromotion(Position position);
+	
+	/**  ILogic interfészû egységre referencia beállítása   */
+	public abstract void setGameLogic( ILogic logic);          
 }

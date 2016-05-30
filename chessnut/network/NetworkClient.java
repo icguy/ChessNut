@@ -33,9 +33,14 @@ public class NetworkClient extends Network implements ILogic
 	private IPlayer gui;                    //!< Ezen érjük el a GUI-t
 
 	// Hálózat részei
-	private Socket socket = null;     //!< Kliens socket
-	private ObjectOutputStream out = null;  //!< Kimenõ stream
-	private ObjectInputStream in = null;    //!< Bejövõ stream
+	/**  Kliens socket   */
+	private Socket socket = null;          
+	
+	/**  Kimenõ stream   */
+	private ObjectOutputStream out = null; 
+	
+	/**  Bejövõ stream   */
+	private ObjectInputStream in = null;   
 	
 	
 	//! \brief  Default konstruktor

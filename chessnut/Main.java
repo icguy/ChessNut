@@ -1,34 +1,38 @@
-/*************************************************
- *  \file     Main.java
- *  \brief    Program main osztálya
- *  \note     
- *  \date     2016. máj. 12.
- *************************************************/
 package chessnut;
+
 
 import chessnut.ai.AI;
 import chessnut.gui.*;
 import chessnut.logic.*;
 import chessnut.network.*;
 
-//PIG Konzolos UI, késõbb kivenni
-//import chessnut.debug.*;
 
-//! \brief  Program fõ osztálya
+/**
+ * Program fõ osztálya.
+ */
 public class Main
 {	
-	private static GUI     GUI;          //!< GUI mindkét oldalon van
-	private static IPlayer Opponent;     //!< Szervernél a hálózat/AI, kliensnél nincs
-	private static ILogic  Logic;        //!< Szervernél a játéklogika, kliensnél a hálózat
+	/**  GUI mindkét oldalon van */
+	private static GUI     GUI;          
 	
-	//! \brief  A program futása itt kezdõdik
+	/**  Szervernél a hálózat/AI, kliensnél nincs */
+	private static IPlayer Opponent;
+	
+	/**  Szervernél a játéklogika, kliensnél a hálózat */
+	private static ILogic  Logic;        
+	
+	/**
+	 * Ezzel a függvénnyel indul a program.
+	 */
 	public static void main(String[] args)
 	{
-		GUI = new GUI();                             // GUI létrehozása
+		GUI = new GUI();         // GUI létrehozása
 	}
 	
 	
-	//! \brief  Szerver oldal felállítása
+	/**
+	 * Szerver oldal felállítása
+	 */
 	public static void setupServer()
 	{
 		// Ez a rendes futás
@@ -39,7 +43,7 @@ public class Main
 		((NetworkServer) Opponent).connect("localhost"); // Hálózat nyitása
 		
 		
-		// PIG Konzolos UI-al futás
+		// Konzolos UI-al futás
 		/*IPlayer ConsoleUI = new ConsolePlayerInterface();
 		Logic = new GameLogic(ConsoleUI);            // Játéklogikát létrehozom
 		Opponent  = new NetworkServer(Logic);        // Szerver oldali hálózatot létrehozom
@@ -50,7 +54,10 @@ public class Main
 	}
 	
 	
-	//! \brief  Kliens oldal felállítása
+	/**
+	 * Kliens oldal felállítása
+	 * @param IP: erre az IP címre csatlakozunk
+	 */
 	public static void setupClient(String IP)
 	{
 		Logic = new NetworkClient();                  // Kliens oldali hálózat jelképezi a logikát
@@ -58,7 +65,7 @@ public class Main
 		GUI.setGameLogic(Logic);                      // GUI logikája a hálózat
 		((NetworkClient) Logic).connect(IP); // Csatlakozás
 		
-		// PIG Konzolos UI-al futás
+		// Konzolos UI-al futás
 		/*IPlayer ConsoleUI = new ConsolePlayerInterface();
 		Logic = new NetworkClient();                  // Kliens oldali hálózat jelképezi a logikát
 		Logic.setPlayer(ConsoleUI);                   // Az õ játékosa a GUI
@@ -67,7 +74,9 @@ public class Main
 		*/
 	}
 	
-	//! \brief  SinglePlayer játék felállítása
+	/**
+	 * Single player játék felállítása
+	 */
 	public static void setupSinglePlayer()
 	{
 		Logic = new GameLogic(GUI);                  // Játéklogikát létrehozom
