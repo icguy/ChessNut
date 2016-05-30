@@ -1,21 +1,28 @@
-/*************************************************
- *  \file     clickMess.java
- *  \brief    Click-et átszállító ChessnutOverIp üzenet
- *  \note     
- *  \date     2016. máj. 13.
- *************************************************/
 package chessnut.network.protocol;
 
 import chessnut.logic.PlayerColor;
 import chessnut.logic.Position;
 
+/**
+ * click függvényhívást továbbító hálózati üzenet
+ */
 public class clickMess extends ChessnutOverIP
 {
-	private static final long serialVersionUID = 7526163295624857149L;  //!< Egyedi magicnumber a sorosításhoz
-	public Position position;      //!< Klikkelt pozíció
-	public PlayerColor player;     //!< Ki küldte
+	/**  Egyedi magicnumber a sorosításhoz   */
+	private static final long serialVersionUID = 7526163295624857149L;
 	
-	//! \brief  Üzenet létrehozó konstruktor
+	/**  klikkelt pozíció   */
+	public Position position;
+	
+	/**  küldõ játékos színe   */
+	public PlayerColor player;
+	
+
+	/**
+	 * Üzenetet létrehozó konstruktor
+	 * @param position: pozíció
+	 * @param player: küldõ játékos színe
+	 */
 	public clickMess(Position position, PlayerColor player)
 	{
 		this.position = position;

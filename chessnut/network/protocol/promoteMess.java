@@ -1,19 +1,23 @@
-/*************************************************
- *  \file     promoteMess.java
- *  \brief    promote-ot átvivõ ChessnutOverIp üzenet
- *  \note     
- *  \date     2016. máj. 13.
- *************************************************/
 package chessnut.network.protocol;
 
 import chessnut.logic.pieces.Piece;
 
+/**
+ * promote függvényhívást továbbító hálózati üzenet
+ */
 public class promoteMess extends ChessnutOverIP
 {
-	private static final long serialVersionUID = 7522223295624857149L;  //!< Egyedi magicnumber a sorosításhoz
-	public Piece piece;            //!< Elõléptetendõ bábu
+	/**  Egyedi magicnumber a sorosításhoz   */
+	private static final long serialVersionUID = 7522223295624857149L;
 	
-	//! \brief  Üzenet létrehozó konstruktor
+	/**  bábu, amelyet a függvényhívás tartalmaz   */
+	public Piece piece;
+	
+
+	/**
+	 * Üzenetet létrehozó konstruktor
+	 * @param piece: üzenet tartalma (bábu)
+	 */
 	public promoteMess(Piece piece)
 	{
 		this.piece = piece;

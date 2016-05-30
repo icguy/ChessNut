@@ -1,19 +1,23 @@
-/*************************************************
- *  \file     notifyPromotionMess.java
- *  \brief    Promotion notifikációt átvivõ ChessnutOverIp üzenet
- *  \note     
- *  \date     2016. máj. 13.
- *************************************************/
 package chessnut.network.protocol;
 
 import chessnut.logic.Position;
 
+/**
+ * notifyPromotion függvényhívást továbbító hálózati üzenet
+ */
 public class notifyPromotionMess extends ChessnutOverIP
 {
-	private static final long serialVersionUID = 7526472295622776222L;  //!< Egyedi magicnumber a sorosításhoz
-	public Position position;         //!< Küldött pozíció a promotion-höz
+	/**  Egyedi magicnumber a sorosításhoz   */
+	private static final long serialVersionUID = 7526472295622776222L;
+	
+	/**  Üzenetben szereplõ pozíció   */
+	public Position position;
 
-	// ! \brief Üzenet létrehozó konstruktor
+
+	/**
+	 * Üzenetet létrehozó konstruktor
+	 * @param position: pozíció
+	 */
 	public notifyPromotionMess(Position position)
 	{
 		this.position = position;
