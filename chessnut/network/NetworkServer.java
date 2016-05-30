@@ -1,9 +1,3 @@
-/*************************************************
- *  \file     NetworkServer.java
- *  \brief    Szerver oldali hálózatkezelés
- *  \note     
- *  \date     2016. máj. 11.
- *************************************************/
 package chessnut.network;
 
 // Általános importok
@@ -26,38 +20,62 @@ import chessnut.network.protocol.promoteMess;
 import chessnut.network.protocol.setChessboardMess;
 
 
-//! \brief  Szerver oldali hálózatkezelõ osztály
+/**
+ * Szerver oldali hálózatkezelõ osztály
+ */
 public class NetworkServer extends Network implements IPlayer
 {
 	// Konstansok
-	private static final int port = 10007;     //!< Port
+	/**  Port száma   */
+	private static final int port = 10007;
 	
-	// Kapcsolódás a játék többi eleméhez
-	private ILogic gameLogic;                  //!< Ezen érjük el a GameLogic-ot
+	/**  Ezen érjük el a gamelogic-ot   */
+	private ILogic gameLogic;
 	
 	// Hálózat részei
-	private ServerSocket serverSocket = null;  //!< Szerver socket
-	private Socket clientSocket = null;        //!< Kliens socket
-	private ObjectOutputStream out = null;     //!< Kimenõ stream
-	private ObjectInputStream in = null;       //!< Bejövõ stream
+	/**  Szerver socker   */
+	private ServerSocket serverSocket = null;
 	
-	//! \brief  Default konstruktor
+	/**  Kliens socket   */
+	private Socket clientSocket = null;
+	
+	/**  Kimenõ stream   */
+	private ObjectOutputStream out = null;
+	
+	/**  Bejövõ stream   */
+	private ObjectInputStream in = null;
+	
+	// Függvények
+	
+
+	/**  Default konstruktor   */
 	public NetworkServer(){}
 	
-	//! \brief  Konstruktor: Létrehozható GameLogic alapján
+
+	/**
+	 * ILogic referenciával létrehozó konstruktor
+	 * @param logic: azon objektum, amelyre a referencia be lesz állítva
+	 */
 	public NetworkServer(ILogic logic)
 	{
 		this.gameLogic = logic;
 	}
 	
-	//! \brief  GameLogic beállítása
+
+	/**
+	 * ILogic referencia beállítása
+	 * @param gameLogic: azon objektum, amelyre a referencia be lesz állítva
+	 */
 	public void setGameLogic(ILogic gameLogic)
 	{
 		this.gameLogic = gameLogic;
 	}
 		
 	
-	//! \brief  Kapcsolat állapotát le lehet kérni
+	/**
+	 * Hálózati kapcsolat állapotának lekérése
+	 * @return true, ha van kapcsolat. false, ha nincs
+	 */
 	public boolean isConnected()
 	{
 		if(clientSocket != null)
@@ -68,7 +86,9 @@ public class NetworkServer extends Network implements IPlayer
 	}
 	
 	
-	// ! \brief Fogadó thread
+	/**
+	 * Fogadó thread
+	 */
 	private class PlayerActionReceiver implements Runnable
 	{	
 		public void run()
@@ -148,7 +168,10 @@ public class NetworkServer extends Network implements IPlayer
 	}
 	
 	
-	//! \brief  Kapcsolódás klienshez
+	/**
+	 * Szervergép létrehozása, kliensre várakozás megnyitása
+	 * @param ipAddr: nem használt paraméter, csupán az öröklõdés miatt van még itt
+	 */
 	@Override
 	public void connect(String ipAddr)
 	{
@@ -170,7 +193,10 @@ public class NetworkServer extends Network implements IPlayer
 		}
 	}
 	
-	//! \brief  Kapcsolat bontása
+
+	/**
+	 * Lekapcsolódás
+	 */
 	@Override
 	void disconnect()
 	{
@@ -191,7 +217,11 @@ public class NetworkServer extends Network implements IPlayer
 		}
 	}
 	
-	//! \brief  Adatküldés kliens oldalra
+
+	/**
+	 * Üzenetküldés a kliensnek
+	 * @param msgToClient: az elküldött üzenet
+	 */
 	void sendMsgToClient(ChessnutOverIP msgToClient)
 	{		
 		// Ha nincs meg az output stream, akkor gond van
@@ -212,7 +242,10 @@ public class NetworkServer extends Network implements IPlayer
 	}
 	
 	
-	//! \brief  Sakktábla átküldése a kliensnek
+	/**
+	 * setChessboard üzenet küldése a kliensnek
+	 * @param chessboard: az átküldött sakktábla
+	 */
 	@Override
 	public void setChessboard(ChessBoard chessboard)
 	{
@@ -220,7 +253,10 @@ public class NetworkServer extends Network implements IPlayer
 		sendMsgToClient(msg);
 	}
 	
-	//! \brief  Promóció felkérés átküldése a kliensnek
+	/**
+	 * notifyPromotion üzenet küldése a kliensnek
+	 * @param position: az üzenetben szereplõ pozíció
+	 */
 	@Override
 	public void notifyPromotion(Position position)
 	{

@@ -1,9 +1,3 @@
-/*************************************************
- *  \file     NetworkClient.java
- *  \brief    Kliens oldali hálózatkezelés
- *  \note     
- *  \date     2016. máj. 12.
- *************************************************/
 package chessnut.network;
 
 //Általános importok
@@ -24,13 +18,18 @@ import chessnut.network.protocol.notifyPromotionMess;
 import chessnut.network.protocol.promoteMess;
 import chessnut.network.protocol.setChessboardMess;
 
+
+/**
+ * Kliens oldali hálózatkezelõ osztály.
+ */
 public class NetworkClient extends Network implements ILogic
 {
 	// Konstansok
+	/**  Port száma   */
 	private static final int port = 10007;
 	
-	// Kapcsolódás a játék többi eleméhez
-	private IPlayer gui;                    //!< Ezen érjük el a GUI-t
+	/**  GUI elérése   */
+	private IPlayer gui;
 
 	// Hálózat részei
 	/**  Kliens socket   */
@@ -43,22 +42,34 @@ public class NetworkClient extends Network implements ILogic
 	private ObjectInputStream in = null;   
 	
 	
-	//! \brief  Default konstruktor
+	/**
+	 * Default konstruktor
+	 */
 	public NetworkClient(){}
 	
-	// ! \brief Konstruktor: Létrehozható GUI alapján
+	/**
+	 * Konstruktor: Létrehozható GUI alapján
+	 * @param gui: amely gui be fog kerülni referenciaként a létrehozott objektumba
+	 */
 	NetworkClient(IPlayer gui)
 	{
 		this.gui = gui;
 	}
 	
-	//! \brief  GUI beállítható
+	
+	/**
+	 * IPlayer referencia beállítása
+	 * @param player: akire a referencia mutat
+	 */
 	public void setPlayer(IPlayer player)
 	{
 		this.gui = player;
 	}
 	
-	// ! \brief Kapcsolat állapotát le lehet kérni
+	/**
+	 * Hálózati kapcsolat állapotának lekérdezése
+	 * @return true, ha kapcsolódva vagyunk. Ellenben false.
+	 */
 	public boolean isConnected()
 	{
 		if (socket != null)
@@ -68,7 +79,9 @@ public class NetworkClient extends Network implements ILogic
 		return false;
 	}
 	
-	// ! \brief Fogadó thread
+	/**
+	 * Fogadó thread
+	 */
 	private class ServerNotificaionReceiver implements Runnable
 	{
 		public void run()
@@ -81,7 +94,7 @@ public class NetworkClient extends Network implements ILogic
 					ChessnutOverIP received = (ChessnutOverIP) in.readObject();
 					
 					// Ha setChessboard üzenet jött
-					if(received instanceof setChessboardMess )  //.msgType == IPlayerMsgType.setChessboard)
+					if(received instanceof setChessboardMess )
 					{
 						// Meghívom a kezelõt:
 						if(gui != null)
@@ -116,7 +129,11 @@ public class NetworkClient extends Network implements ILogic
 		}
 	}
 	
-	//! \brief  Kapcsolódás szerverhez
+	
+	/**
+	 * Kapcsolódás szerverhez
+	 * @param ip: szerver IP címe
+	 */
 	@Override
 	public void connect(String ip)
 	{
@@ -146,7 +163,10 @@ public class NetworkClient extends Network implements ILogic
 		}
 	}
 	
-	//! \brief  Kapcsolat bontás
+	
+	/**
+	 * Kapcsolat bontás
+	 */
 	@Override
 	void disconnect()
 	{
@@ -165,7 +185,11 @@ public class NetworkClient extends Network implements ILogic
 		}
 	}
 
-	// ! \brief Adatküldés szerver oldalra
+
+	/**
+	 * Üzenetküldés a szervernek
+	 * @param msgToServer: Az elküldött üzenet
+	 */
 	void sendMsgToServer(ChessnutOverIP msgToServer)
 	{
 		// Ha nincs meg az output stream, akkor gond van
@@ -185,7 +209,12 @@ public class NetworkClient extends Network implements ILogic
 		}
 	}
 	
-	//! \brief  Click átküldése
+
+	/**
+	 * click átküldése
+	 * @param position: click-ben szereplõ pozíció
+	 * @param player: küldõ játékos színe
+	 */
 	@Override
 	public void click(Position position, PlayerColor player)
 	{
@@ -193,7 +222,11 @@ public class NetworkClient extends Network implements ILogic
 		sendMsgToServer(msg);
 	}
 	
-	//! \brief  Promote átküldése
+
+	/**
+	 * promote átküldése
+	 * @param piece: promote-ban szereplõ bábu
+	 */
 	@Override
 	public void promote(Piece piece)
 	{
