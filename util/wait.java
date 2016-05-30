@@ -1,16 +1,18 @@
-/*************************************************
- *  \file     wait.java
- *  \brief    Ezzel lehet várni
- *  \note     Mert ha üres ciklust hagysz a várakozásba, azt a Java nem szereti
- *  \date     2016. máj. 15.
- *************************************************/
 package util;
 
+/**
+ * Várakozáshoz való osztály, amely belül kezeli az exception-t is, hogy ne kelljen máshol bohóckodni vele.
+ */
 public class wait
 {
-	public static final int SEC = 1000;  //!< Másodperc definíciója (ms-ben)
+	/**  Egy másodperc definíciója   */
+	public static final int SEC = 1000;
 	
-	//! \brief  Másodperc várakozás
+
+	/**
+	 * Ez a függvény a paraméterben megadott másodperc ideig vár
+	 * @param sec: hány másodpercig várjunk
+	 */
 	public void waitSec(int sec)
 	{
 		try
