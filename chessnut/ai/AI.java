@@ -1,9 +1,4 @@
-/*************************************************
- *  \file     AI.java
- *  \brief    Chessnut mesterséges intelligencia osztálya
- *  \note     
- *  \date     2016. máj. 13.
- *************************************************/
+
 package chessnut.ai;
 
 import java.util.Objects;
@@ -16,29 +11,65 @@ import chessnut.logic.pieces.Piece;
 import chessnut.logic.pieces.Queen;
 import chessnut.logic.PlayerColor;
 import chessnut.logic.Move;
-
+/**
+ *  Chessnut mesterséges intelligencia osztálya
+ *  <p>
+ *  A Negamax (negált maximum) a minimax és az alfa-béta eljárás implementálásának egyszeru formája, a következo egyenloség felhasználásával:
+ *  max{min{x1, x2, ...}, min{y1, y2, ...}} = max{-max{-x1, -x2, ...},-max{-y1, -y2, ...}}
+ *  Ahol xi és yi egy fa levelei.
+ *  <p>
+ *  http://homepages.cwi.nl/~paulk/theses/Carolus.pdf
+ *  <p>
+ *  A sakktábla kiértékelésénél minden bábunak saját értéke van. Ezek az értékek szorzódnak -1, vagy +1-gyel, attól függoen, hogy milyen színrol van szó.
+ *  Ezen felül a mobilitási paraméter megmondja, hogy hány lehetséges következo lépése van a bábunak.
+ *  A ketto fenti paramétert minden bábura kiértékelve és összeadva, megkapjuk az aktuális állás elojeles értékét.
+ *  Jelen esetben a fekete bábuhoz pozitív érték tartozik, fehérhez pedig negaítv.
+ *  <p>
+ *  https://chessprogramming.wikispaces.com/Evaluation
+ *  
+ */
 public class AI implements IPlayer
 {
-	ILogic gameLogic;   //!< Ezen a referencián érheti el a GameLogic-ot
+	/** Ezen a referencián érheti el a GameLogic-ot*/
+	ILogic gameLogic;   
+	
+	/** A mesterséges intelligencia számolásának iterációi*/
 	int iterations;
+	
+	/** A mesterséges intelligencia kiszámolt lépései*/
 	Move moveAI;
+	
+	/** Az elso kattintás indikátora*/
 	boolean firstStep;
+	
+	/** A kapott sakktábla, amelyen a számolások vézendoek*/
 	ChessBoard ownChessboard;
 	
-	//! \brief  Konstruktor: létrehozható gameLogic alapján
+	
+	/**  Konstruktor: létrehozható gameLogic alapján*/
 	public AI(ILogic logic)
 	{
 		this.gameLogic = logic;
 	}
 	
-	//! \brief  Ezzel beállítható a gamelogic referencia
+	
+	/** Ezzel beállítható a gamelogic referencia*/
 	@Override
 	public void setGameLogic(ILogic logic)
 	{
 		this.gameLogic = logic;
 	}
 		
-	
+	/**
+	* Negamax keresési algoritmus, a következo dokumentum alapján:
+	* http://homepages.cwi.nl/~paulk/theses/Carolus.pdf -> 12. oldal
+	* @param moves: a kiszámolt lépés
+	* @param board: az aktuális sakktábla
+	* @param depth: a keresés mélysége
+	* @param alpha: az algoritmus alfa paramétere
+	* @param beta: az algoritmus béta paramétere
+	* @return A legjobb lépés kiértékelésének eredménye
+	*/
 	private int alphaBeta(Move moves, ChessBoard board, int depth, int alpha, int beta)
 	{
 		int value = 0;
@@ -48,45 +79,45 @@ public class AI implements IPlayer
 		int file = 0;
 		Position posNull = new Position(0,0);
 		PlayerColor tempColor, tempColor1;
-		if (depth == 0)	//vagy a boardnak vége van ??
+		if (depth == 0)	//a keresés a megfelelo mélységu
 		{
-			value = evaluate(board);
+			value = evaluate(board);	//a sakktábla kiértékelése
 			return value;
 		}
-		//gotMoveBoard = getPossibleMoves(posTemp, board);
 		Move moveNull = new Move(posNull, posNull);
 		Move move;
-		ChessBoard nextBoard; //=board.getPossibleNextBoards().get(0); 	//????
+		ChessBoard nextBoard; 
 		i=board.getAllPossibleNextMoves().size()-1;
 		while(i > 0 )
 		{
 			iterations++;		
 			i--;
-			for(rank = 7; rank>=0; rank--)
+			for(rank = 7; rank>=0; rank--)	
 			{
 				for(file = 7; file>=0; file--)
 				{
 					
-					move = board.getAllPossibleNextMoves().get(i);	
+					move = board.getAllPossibleNextMoves().get(i);	//az összes lehetséges következo lépés közül kiválasztjuk a következot
 				
 					if(move.getStart() != null)
 					{
-						tempColor = board.getPiece(move.getStart()).getColor();
+						tempColor = board.getPiece(move.getStart()).getColor();	
 					}else
 					{
 						tempColor = PlayerColor.White;
 					}
-					if (Objects.equals(tempColor, PlayerColor.Black))
+					
+					if (Objects.equals(tempColor, PlayerColor.Black))	//csak a fekete bábukat viizsgáljuk	
 					{
 						
-						nextBoard = board.getPossibleNextBoards().get(i);
+						nextBoard = board.getPossibleNextBoards().get(i);	//következo lehetséges tábla	
 					
 						
-						value = -alphaBeta(move, nextBoard, depth-1, -beta, -alpha); //clicks !!!!
+						value = -alphaBeta(move, nextBoard, depth-1, -beta, -alpha);	//rekurzió 
 						//
 						
 						
-					if(value > best && Objects.equals(move, moveNull));
+					if(value > best && Objects.equals(move, moveNull));// bábu színére vonatkozó ellenorzések	
 					{
 						if(board.getPiece(move.getStart()).getColor() != null)
 						{
@@ -97,16 +128,16 @@ public class AI implements IPlayer
 						}
 						
 						
-						if(Objects.equals(tempColor1, PlayerColor.White))
-							value = -1000;
+						if(Objects.equals(tempColor1, PlayerColor.White)) 
+							value = -1000;	
 						else{
 							
-							best = value;
-							moveAI = move;
+							best = value;	
+							moveAI = move;	//legjobb lépést eltároljuk
 						}
 					}
 					if(best>value)
-						alpha = best;
+						alpha = best;	//az algoritmus új alfa értéke
 					if(best >= beta)
 						break;
 					}
@@ -114,32 +145,34 @@ public class AI implements IPlayer
 			}
 		}
 		
-		//board = boardTempToOperate;
 		return best;
 	}
+	
+	
+	/**
+	* A sakktábla aktuális állását adja meg a táblán elhelyezkedo bábuk alapján.
+	* Figyelembe veszi, hogy melyik játékosnak milyen bábui vannak a táblán, illetve azok mozgási lehetoségeit.
+	* @param board: aktuális sakktábla
+	* @return Kiértékelt sakktábla értéke
+	*/
 	private int evaluate(ChessBoard board)
 	{
 		int valueMobility = 0;
 		int valueMaterial = 0;
 		int value = 0;
 		String tempChar = "";
-		//Piece tempPiece = new Piece()
 		Position pos = new Position(0,0);
 		
 		ChessBoard tempBoard;
-		//while(board.getPossibleNextBoards().size() < i)
 		{
-			//i++;
-			tempBoard = board;//.getPossibleNextBoards().get(i);
-			for(int ranks = 7; ranks>=0; ranks--)
+			tempBoard = board;
+			for(int ranks = 7; ranks>=0; ranks--)	//az összes bábut beleszámoljuk a játékba
 			{
 				for(int  files = 7; files >=0;  files--)
 				{
-					//pos=Position.tryCreate(ranks, files);
 					pos = new Position(ranks, files);
 					tempChar = "";
 					tempChar += tempBoard.getPiece(ranks, files);
-					//.toString();
 					if (Objects.equals(tempChar, "K")) //King white
 					{
 						valueMobility -= tempBoard.getPiece(ranks, files).getPossibleMoves(pos, tempBoard).size();
@@ -207,17 +240,17 @@ public class AI implements IPlayer
 			
 		}
 		
-		
-		
-		
-		
-		value = valueMobility + 10*valueMaterial;
+				
+		value = valueMobility + 10*valueMaterial; 	// sakktábla értékének számítása
 		return value;
 	}
 	
 	
-	//! \brief  Sakktáblát kaptam
-	@Override
+	/**
+	* AI szál indítása
+	* @param chessboard: aktuális sakktábla
+	*/
+	@Override	
 	public void setChessboard(ChessBoard chessboard)
 	{
 		System.out.println("AI handles setChessboard.");
@@ -226,15 +259,22 @@ public class AI implements IPlayer
 		aiThread.start();
 	}
 	
-	// Ebben a thread-ben fogunk számolgatni
+
+	/** A mesterséges intelligencia szála */
 	private class AiWorkingThread implements Runnable
 	{
 		@Override
+		/**
+		* Mielott elkezdodik az AI algoritmusa, idozítési problémák miatt 1 másodpercet várunk.
+		* Ha új sakktábla érkezett, és a fekete játékos a soros, elkezdodik a számlálás.
+		* Számlálás után az elso kattintás megtörténik.
+		* Ha megkaptuk az új táblát, a második kattintás is megtörténik.
+		*/
 		public void run()
 		{
 			Position firstClick = new Position(6,0);
 			Position secondClick = new Position(0,0);
-			Move moves = new Move(firstClick, secondClick);//(firstClick, secondClick);
+			Move moves = new Move(firstClick, secondClick); 
 				try {
 				    Thread.sleep(1000);                 //1000 milliseconds is one second.
 				} catch(InterruptedException ex) {
@@ -247,8 +287,8 @@ public class AI implements IPlayer
 					
 					
 					iterations = 0;
-					alphaBeta(moves, ownChessboard, 2, -100, 100);
-					gameLogic.click(moveAI.getStart(), PlayerColor.Black);
+					alphaBeta(moves, ownChessboard, 2, -100, 100);		// kereso algoritmus
+					gameLogic.click(moveAI.getStart(), PlayerColor.Black);	//az elso kattintás 
 					
 						
 					
@@ -256,7 +296,7 @@ public class AI implements IPlayer
 					firstStep = false;
 				} else if (ownChessboard.getNextToMove() == PlayerColor.Black && iterations >0)
 				{
-					gameLogic.click(moveAI.getEnd(), PlayerColor.Black);
+					gameLogic.click(moveAI.getEnd(), PlayerColor.Black);	//a második kattintás
 					
 					iterations = 0;
 					firstStep = true;
@@ -264,8 +304,10 @@ public class AI implements IPlayer
 		}
 	}
 	
-	
-	//! \brief  Megkértek, hogy léptessek elõ egy parasztot
+	/**
+	* Gyalogos eloléptetése
+	* @param position: léptetendo bábu pozíciója
+	*/
 	 @Override
 	public void notifyPromotion(Position position)
 	{
