@@ -24,16 +24,27 @@ import chessnut.logic.Position;
 import chessnut.logic.pieces.*;
 
 
-//! \brief  GUI fõ osztály
+/**
+ * GUI fõ osztály
+ */
 public class GUI extends JFrame implements IPlayer
 {
+	/**  Egyedi magicnumber a sorosításhoz   */
 	private static final long serialVersionUID = 1111111111111111L;  //!< Nem kell foglalkozni vele, ez a serializable osztályoknak kell, hogy azonosítani tudják magukat
 	
-	private ILogic logic;                 //!< Ezen a referencián tudom a kapcsolatot tartani a játéklogikával
-	private PlayerColor myPlayerColor;    //!< Ebben megjegyzem, hogy milyen oldal vagyok, hogy néhány dologról el tudjam dönteni, hogy vonatkozik-e rám
-	private boolean gameStarted = false;  //!< Kezdtünk-e már játékot. Innnentõl nem lehet a menüben újat kezdeni. Innentõl lehet kattintani
+	/** Ezen a referencián tudom a kapcsolatot tartani a játéklogikával */
+	private ILogic logic;
+	
+	/** Ebben megjegyzem, hogy milyen oldal vagyok, hogy néhány dologról el tudjam dönteni, hogy vonatkozik-e rám*/
+	private PlayerColor myPlayerColor;
+	
+	/** Játék kezdése. Innentõl lehet kattintani */
+	private boolean gameStarted = false;
+	
+	/**  */
 	private ChessBoard chessBoard;
 	
+	/** Sakkfigurák képei */
 	BufferedImage BBishop = null;
 	BufferedImage BKing = null;
 	BufferedImage BKnight = null;
@@ -48,18 +59,26 @@ public class GUI extends JFrame implements IPlayer
 	BufferedImage WRook = null;
 	
 	//! \brief  Konstruktor
+	/** 
+	 * GUI konstruktor
+	 */
 	public GUI()
 	{
-		// Alapvetõ beállítások
+		/** Alapvetõ beállítások */
 		super("Chessnut");                                    // Létrejön az ablak
 		setSize(600, 600);                                    // Ablakméret beállítása
 		setDefaultCloseOperation(EXIT_ON_CLOSE);              // Alapértelmezett kilépési beállítás
 		setLayout(null);                                      // Layout
 		
-		// Menüsor
+		/** Menüsor, amiben létrehozunk egy "Start game" menüpontot,
+		 * melybõl legördülõ listából kiválaszthatjuk a játékmódot:
+		 * Szerver indítás
+		 * Csatlakozás szerverhez
+		 * Gép elleni játék */
 		JMenuBar menuBar = new JMenuBar();                    // Menüsor létrejön
 		JMenu menu = new JMenu("Start game");                 // Start game menüpont
-
+		
+		/** Szerverindítás almenüpont */
 		JMenuItem menuItem = new JMenuItem("Start server");   // Start szerver almenüpont
 		menuItem.addActionListener(new ActionListener()
 		{
@@ -76,7 +95,8 @@ public class GUI extends JFrame implements IPlayer
 			}
 		});
 		menu.add(menuItem);
-
+		
+		/** Szerverhez csatlakozás almenüpont */
 		menuItem = new JMenuItem("Connect to server");        // Connect to server játékmód almenüpontja
 		menuItem.addActionListener(new ActionListener()
 		{
@@ -101,7 +121,7 @@ public class GUI extends JFrame implements IPlayer
 		});
 		menu.add(menuItem);
 
-
+		/** Gép elleni játék almenüpontja */
 		menuItem = new JMenuItem("Single player game");       // AI elleni játék almenüpontja
 		menuItem.addActionListener(new ActionListener()
 		{
@@ -121,6 +141,7 @@ public class GUI extends JFrame implements IPlayer
 		
 		menuBar.add(menu);
 
+		/** Kilépés menüpont */
 		menuItem = new JMenuItem("Exit");                      // Kilépõ gomb
 		menuItem.addActionListener(new ActionListener()
 		{
@@ -135,7 +156,7 @@ public class GUI extends JFrame implements IPlayer
 
 		setJMenuBar(menuBar);
 
-		
+		/** Sakktáblán való kattintás helyének kiszámítása */
 		addMouseListener(new MouseAdapter()
 		{
 		     @Override
@@ -167,6 +188,7 @@ public class GUI extends JFrame implements IPlayer
 		     }
 		 });
 		
+		/** Sakkfigurák képeinek beolvasása  */
 		try {
 			BBishop = ImageIO.read(getClass().getResource(("pictures\\BBishop.png")));
 			BKing = ImageIO.read(getClass().getResource(("pictures\\BKing.png")));
@@ -185,12 +207,16 @@ public class GUI extends JFrame implements IPlayer
 			System.out.println("File not found: " + ex.getMessage());
 		}
 		
-		
+		/** Ablak láthatóvá tétele */
 		setVisible(true);               // Láthatóvá teszem az ablakot
 	}
 	
 	
 	//! \brief  Beállítható a referenciám a Logic-ra
+	/**
+	 * ILogic referencia beállítása
+	 * @param logic: ahova a referencia mutat
+	 */
 	@Override
 	public void setGameLogic(ILogic logic)
 	{
@@ -199,6 +225,10 @@ public class GUI extends JFrame implements IPlayer
 	
 	
 	//! \brief  Beérkezõ sakktábla lekezelése
+	/**
+	 * ChessBoard referencia beállítása
+	 * @param chessboard: akire a referencia mutat
+	 */
 	@Override
 	public void setChessboard(ChessBoard chessboard)
 	{
@@ -213,10 +243,8 @@ public class GUI extends JFrame implements IPlayer
 		 * Utóbbi a myPlayerColor alapján szelektálható, hogy vonatkozik-e rám
 		 */
 		this.chessBoard = chessboard;
-		/*if (myPlayerColor==)
-		{
-			
-		}*/
+
+		/** Felület újbóli kirajzolása */
 		repaint();
 		
 		setVisible(true);
@@ -225,14 +253,24 @@ public class GUI extends JFrame implements IPlayer
 	
 	
 	//! \brief  Gyalogváltás kérelem lekezelése
+	/**
+	 * Gyalogváltás kérelem lekezelése
+	 * @param position: ide érkezett be a játékos gyalogja
+	 */
 	@Override
 	public void notifyPromotion(Position position)
 	{
 		System.out.println("GUI handles notifyPromotion.");
+		
+		/** Az választott figura változója */
 		Piece piece=null;
 
+		/** Választó ablak megnyitása */
 		PromotionDialog promDialog = new PromotionDialog();
+		
+		 /** Választott elem */
 		String Chosen = null;
+		
 		while ( Chosen == null )
 		{
 			Chosen = promDialog.getChosenOne();
@@ -240,6 +278,7 @@ public class GUI extends JFrame implements IPlayer
 		System.out.println("Valasz: " + Chosen);
 		promDialog.dispose();
 		promDialog = null;	
+		
 		
 		if (Chosen=="Bishop")
 		{
@@ -262,16 +301,23 @@ public class GUI extends JFrame implements IPlayer
 
 	}
 	
-	
+	/** 
+	 * A látható felület megjelenítése.
+	 * Itt történik a sakktábla kirajzolása és a figurák elhelyezése a táblán.
+	 * 
+	 */
 	public void paint(Graphics g) {
         super.paint(g);  // fixes the immediate problem.
         
+        /** Tábla mezõinek színe */
         Color darkBrown = new Color(139, 69, 19);
 		Color lightBrown = new Color(232, 194, 145);
+		
+		/** Mezõk színe a lehetséges lépések helyein */
 		Color selectColor1 = new Color((int)(139*1.5), (int)(69*1.5), (int)(19*1.5));
 		Color selectColor2 = new Color((int)(255), (int)(194*1.3), (int)(145*1.5));
 
-		
+		/** Ablak méreteinek meghatározása*/
 		int width=getContentPane().getWidth();
 		int height=getContentPane().getHeight();
 		int yOffset = getHeight() - getContentPane().getHeight();
