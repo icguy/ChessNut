@@ -7,6 +7,9 @@ public class Rook extends Piece
 {
 	private static final long serialVersionUID = 2758435245622732188L;  //!< Egyedi magicnumber a sorosításhoz
 	
+	/**
+	 * True, ha a bástyával már lépett a játékos
+	 */
 	private boolean hasMoved;
 
 	public Rook(PlayerColor color)
