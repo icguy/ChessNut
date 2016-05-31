@@ -5,23 +5,63 @@ import java.util.ArrayList;
 import chessnut.logic.pieces.*;
 
 /*
- * board indices go from 0 to 7, where the first index is the rank, second is the file of
- * the corresponding position, e.g. [0][0] marks the 'a1' corner square.
+ * A sakktábla állását, és a kijelöléseket tároló osztály.
  */
 public class ChessBoard implements Serializable
 {
-	private static final long serialVersionUID = 1532472298888732188L; //!< Egyedi magicnumber a sorositashoz
-
+	/**
+	 * Sorosításhoz szükséges azonosító
+	 */
+	private static final long serialVersionUID = 1532472298888732188L;
+	
+	/**
+	 * A mezõk aktuális kijelöltsége
+	 */
 	private SelectionType[][] selection;
+	
+	/**
+	 * A táblán lévõ bábuk
+	 */
 	private Piece[][] board;
+	
+	/**
+	 * A következõ játékos színe
+	 */
 	private PlayerColor nextMove;
+	
+	/**
+	 * Az összes lehetséges következõ lépés listája 
+	 */
 	private ArrayList<Move> allPossibleMoves;
+	
+	/**
+	 * A sötét király pozíciója
+	 */
 	private Position blackKingPos;
+	
+	/**
+	 * A világos király pozíciója
+	 */
 	private Position whiteKingPos;
+	
+	/**
+	 * True, ha épp arra várunk, hogy a következõ játékos kiválassza, hogy mire cseréli le a bevitt gyalogját
+	 */
 	private boolean awaitingPromotion;
+	
+	/**
+	 * A lecserélt gyalog pozíciója
+	 */
 	private Position promotionPos;
+	
+	/**
+	 * A játék állapota
+	 */
 	private ChessgameState gameState;
 
+	/**
+	 * Default konstruktor. Új sakktáblát hoz létre a kezdõállással, világos lép
+	 */
 	public ChessBoard()
 	{
 		selection = new SelectionType[8][8];
@@ -33,8 +73,10 @@ public class ChessBoard implements Serializable
 	}
 	
 	
-	//! \brief  Copy konstruktor a hálózaton átküldéshez
-	//! \note   Nem mindent másol át, csak ami a túloldalt is lényeges
+	/**
+	 * Copy konstruktor a network számára
+	 * @param chessboard A másolandó sakktábla
+	 */
 	public ChessBoard(ChessBoard chessboard)
 	{
 		try
@@ -69,6 +111,11 @@ public class ChessBoard implements Serializable
 		}
 	}
 
+	/**
+	 * Paraméteres konstruktor.
+	 * @param board A tábla állása
+	 * @param nextMove Következõ játékos 
+	 */
 	public ChessBoard(Piece[][] board, PlayerColor nextMove)
 	{
 		this.selection = new SelectionType[8][8];
@@ -78,6 +125,12 @@ public class ChessBoard implements Serializable
 		updateGameState();
 	}
 
+	/**
+	 * Paraméteres konstruktor. Kizárólag állás elemzésére
+	 * @param board A tábla állása
+	 * @param nextMove Következõ játékos 
+	 * @param gameState A játék állapota
+	 */
 	private ChessBoard(Piece[][] board, PlayerColor nextMove, ChessgameState gameState)
 	{
 		this.selection = new SelectionType[8][8];
@@ -86,9 +139,12 @@ public class ChessBoard implements Serializable
 		this.gameState = gameState;
 		updateKingPos();
 		//no updateGameState(), because that leads to stack overflow.
-		//only to be used when constructing boards for analyzis (determining check etc.)
+		//only to be used when constructing boards for analysis (determining check etc.)
 	}
 
+	/**
+	 * Beállítja a kezdõállapotot
+	 */
 	private void initBoard()
 	{
 		for (int i = 0; i < 8; i++)
@@ -124,6 +180,11 @@ public class ChessBoard implements Serializable
 		board[7][7] = new Rook(PlayerColor.Black);
 	}
 
+	/**
+	 * Lecseréli a bevitt gyalogot az új bábura
+	 * @param newPiece Az új bábu. A színének meg kell felelnie a következõ játékos színének
+	 * @return True, ha sikeres volt a mûvelet
+	 */
 	public boolean Promote(Piece newPiece)
 	{
 		if (!awaitingPromotion)
@@ -147,11 +208,10 @@ public class ChessBoard implements Serializable
 	}
 
 	/**
-	 * If possible, makes a move on the chessboard
+	 * Végrehajt egy lépést a táblán
 	 * 
-	 * @param move
-	 *            the move to be made
-	 * @return true if the move could be made, false otherwise
+	 * @param move A lépés
+	 * @return True, ha sikerült a lépést meglépni
 	 */
 	public boolean makeMove(Move move)
 	{
@@ -235,11 +295,18 @@ public class ChessBoard implements Serializable
 		return false;
 	}
 
+	/**
+	 * A következõ játékost az ellenkezõjére állítja
+	 */
 	private void changeNextMove()
 	{
 		nextMove = (nextMove == PlayerColor.White) ? PlayerColor.Black : PlayerColor.White;
 	}
 
+	/**
+	 * Megvizsgálja, hogy a következõ játékos sakkban van-e.
+	 * @return True, ha sakkban van
+	 */
 	private boolean isInCheckInner()
 	{
 		Position kingPos = (nextMove == PlayerColor.White) ? whiteKingPos : blackKingPos;
@@ -271,6 +338,9 @@ public class ChessBoard implements Serializable
 		return false;
 	}
 
+	/**
+	 * Frissíti a játék állapotát
+	 */
 	private void updateGameState()
 	{
 		getAllPossibleNextMoves();
@@ -287,6 +357,9 @@ public class ChessBoard implements Serializable
 		}
 	}
 
+	/**
+	 * Frissíti a királyok pozícióját
+	 */
 	private void updateKingPos()
 	{
 		for (int i = 0; i < 8; i++)
@@ -305,12 +378,21 @@ public class ChessBoard implements Serializable
 		}
 	}
 
+	/**
+	 * Teszt metódus
+	 * @param obj
+	 * @return
+	 */
 	public Object TestMethod(Object obj)
 	{
 		return getPossibleNextCastlingMoves();
 		//return moveEndsUpInCheck((Move) obj);
 	}
 
+	/**
+	 * Visszaadja a lehetséges sáncoló lépéseket
+	 * @return A sáncoló lépések listája
+	 */
 	// @formatter:off
 	private ArrayList<Move> getPossibleNextCastlingMoves()
 	{
@@ -377,6 +459,11 @@ public class ChessBoard implements Serializable
 	}
 	// @formatter:on
 
+	/**
+	 * Megvizsgálja, hogy egy lépés után a lépést végrehajtó játékos sakkban van-e
+	 * @param move A lépés
+	 * @return True, ha a lépés szabálytalan, mert sakkba kerül a játékos
+	 */
 	private boolean moveEndsUpInCheck(Move move)
 	{
 		Position start = move.getStart();
@@ -388,6 +475,10 @@ public class ChessBoard implements Serializable
 		return newChessBoard.isInCheck();
 	}
 
+	/**
+	 * Létrehozza az adott állásból következõ összes további lehetséges állást
+	 * @return Az összes következõ játékálláshoz tartozó ChessBoard listája
+	 */
 	public ArrayList<ChessBoard> getPossibleNextBoards()
 	{
 		ArrayList<ChessBoard> nextBoards = new ArrayList<>();
@@ -419,6 +510,10 @@ public class ChessBoard implements Serializable
 		return nextBoards;
 	}
 
+	/**
+	 * Visszatér az összes lehetséges következõ lépés listájával
+	 * @return Az összes lehetséges következõ lépés listája
+	 */
 	public ArrayList<Move> getAllPossibleNextMoves()
 	{
 		if (allPossibleMoves != null)
@@ -445,6 +540,11 @@ public class ChessBoard implements Serializable
 		return moves;
 	}
 
+	/**
+	 * Visszatér az összes lehetséges következõ lépés listájával, amit egy adott helyen lévõ bábu léphet
+	 * @param position A bábu helyzete
+	 * @return Az összes lehetséges következõ lépés listája
+	 */
 	private ArrayList<Move> getNextMoves(Position position)
 	{
 		Piece piece = getPieceRef(position);
@@ -455,21 +555,42 @@ public class ChessBoard implements Serializable
 		return moves;
 	}
 
+	/**
+	 * Lekéri az adott helyen található bábu referenciáját
+	 * @param pos A pozíció
+	 * @return A bábu referenciája
+	 */
 	private Piece getPieceRef(Position pos)
 	{
 		return getPieceRef(pos.getRank(), pos.getFile());
 	}
 
+	/**
+	 * Lekéri az adott helyen található bábu referenciáját
+	 * @param rank A bábu sora
+	 * @param file A bábu oszlopa
+	 * @return A bábu referenciája
+	 */
 	private Piece getPieceRef(int rank, int file)
 	{
 		return board[rank][file];
 	}
 
+	/**
+	 * Visszaadja a játéktábla másolatát
+	 * @return a játéktábla másolata
+	 */
 	public Piece[][] getBoard()
 	{
 		return cloneTable(board);
 	}
 
+	/**
+	 * Lekéri az adott helyen található bábu másolatát
+	 * @param rank A bábu sora
+	 * @param file A bábu oszlopa
+	 * @return A bábu másolata
+	 */
 	public Piece getPiece(int rank, int file)
 	{
 		if (board[rank][file] == null)
@@ -477,37 +598,65 @@ public class ChessBoard implements Serializable
 		return board[rank][file].clone();
 	}
 
+	/**
+	 * Lekéri az adott helyen található bábu másolatát
+	 * @param pos A pozíció
+	 * @return A bábu másolata
+	 */
 	public Piece getPiece(Position pos)
 	{
 		return getPiece(pos.getRank(), pos.getFile());
 	}
 
+	/**
+	 * Visszaadja, hogy éppen bábu lecserélésre várunk-e
+	 * @return True, ha éppen bábu lecserélésre várunk
+	 */
 	public boolean isAwaitingPromotion()
 	{
 		return awaitingPromotion;
 	}
 
+	/**
+	 * Visszaadja a lecserélendõ gyalog pozícióját
+	 * @return a lecserélendõ gyalog pozíciója
+	 */
 	public Position getPromotionPos()
 	{
 		return promotionPos;
 	}
 
+	/**
+	 * Visszaadja a játék állapotát
+	 * @return a játék állapota
+	 */
 	public ChessgameState getGameState()
 	{
 		return gameState;
 	}
 
+	/**
+	 * Vosszaadja a következõ játékos színét
+	 * @return a következõ játékos színe
+	 */
 	public PlayerColor getNextToMove()
 	{
 		return this.nextMove;
 	}
 
+	/**
+	 * Visszaadja, hogy a következõ játékos sakkban van-e
+	 * @return True, ha a következõ játékos sakkban van
+	 */
 	public boolean isInCheck()
 	{
 		// ha kell a check-et cache-elni, akkor itt tudod megcsinÃ¡lni
 		return isInCheckInner();
 	}
 
+	/**
+	 * String konverzió
+	 */
 	@Override
 	public String toString()
 	{
@@ -547,11 +696,19 @@ public class ChessBoard implements Serializable
 		return sb.toString();
 	}
 
+	/**
+	 * lemásolja a sakktáblát
+	 */
 	public ChessBoard clone()
 	{
 		return new ChessBoard(board, nextMove);
 	}
 
+	/**
+	 * Lemásol egy bábu tömböt
+	 * @param table a másolandó tömb
+	 * @return a másolat
+	 */
 	public Piece[][] cloneTable(Piece[][] table)
 	{
 		Piece[][] newtable = new Piece[table.length][];
@@ -575,11 +732,19 @@ public class ChessBoard implements Serializable
 	
 	/*------------------- SELECTION RELATED METHODS -------------------*/
 
+	/**
+	 * Visszaadja a kijelölt mezõk tömbjét
+	 * @return a kijelölt mezõk tömbje
+	 */
 	public SelectionType[][] getSelections()
 	{
 		return selection;
 	}
 
+	/**
+	 * Módosítja a kijelölést, úgy, hogy a user a megadott pozícióra klikkelt
+	 * @param selectedPos a user által kijelölt pozíció
+	 */
 	public void selectHighlightSquare(Position selectedPos)
 	{
 		if (getPieceRef(selectedPos) == null)
@@ -597,6 +762,9 @@ public class ChessBoard implements Serializable
 		}
 	}
 
+	/**
+	 * Letörli a kijelöléseket 
+	 */
 	public void clearHighlightSelection()
 	{
 		for (int i = 0; i < 8; i++)
@@ -608,11 +776,21 @@ public class ChessBoard implements Serializable
 		}
 	}
 
+	/**
+	 * Adott pozíciónak megváltoztatja a kijelölés-típusát
+	 * @param pos
+	 * @param type
+	 */
 	public void setHighlight(Position pos, SelectionType type)
 	{
 		selection[pos.getRank()][pos.getFile()] = type;
 	}
 
+	/**
+	 * 
+	 * A sakkjátszma állapotát jellemzõ enum
+	 * 
+	 */
 	public enum ChessgameState
 	{
 		Playing,
@@ -620,6 +798,11 @@ public class ChessBoard implements Serializable
 		Checkmate
 	}
 
+	/**
+	 * 
+	 * A kijelölés típusát jellemzõ enum
+	 *
+	 */
 	//no selection is null
 	public enum SelectionType
 	{
