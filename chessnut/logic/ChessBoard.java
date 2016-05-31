@@ -636,7 +636,7 @@ public class ChessBoard implements Serializable
 	}
 
 	/**
-	 * Vosszaadja a következõ játékos színét
+	 * Visszaadja a következõ játékos színét
 	 * @return a következõ játékos színe
 	 */
 	public PlayerColor getNextToMove()
