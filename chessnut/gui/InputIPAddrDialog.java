@@ -1,26 +1,20 @@
-/*************************************************
- *  \file     InputIPAddrDialog.java
- *  \brief    IP címet bekérõ szövegdobozos ablak
- *  \note     Csak kliens oldalon.
- *  \date     2016. máj. 14.
- *************************************************/
 package chessnut.gui;
 
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 
-//! \brief  Ez az osztály maga a felugró ablak
 /**
  * IP kérõ ablak osztály.
  */
 public class InputIPAddrDialog extends JFrame
 {
-	private static final long serialVersionUID = 1532472210101010188L; //!< Egyedi magicnumber a sorositashoz
+	/**  Magicnumber a sorosításhoz   */
+	private static final long serialVersionUID = 1532472210101010188L;
 	
 	/** Megadott IP cím */
 	String IPAddr;  //!< IP címet ebbe fogjuk kapni
 	
-	//! \brief  Konstruktor
+
 	/**
 	 * Konstruktor
 	 */
@@ -42,7 +36,6 @@ public class InputIPAddrDialog extends JFrame
 		setVisible(true);               // Láthatóvá teszem az ablakot
 	}
 	
-	//! \brief  Ezzel kérdezhetjük meg az IP címet
 	/** 
 	 * IP cím lekérdezése
 	 * @return IPAddr: visszaadja a beírt IP címet 

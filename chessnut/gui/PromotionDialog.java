@@ -8,6 +8,7 @@ import javax.swing.JOptionPane;
  */
 public class PromotionDialog extends JFrame
 {
+	/**  Sorosítás medzsikszám.   */
 	private static final long serialVersionUID = 3017906404975522665L;
 	
 	/** Választott figura */

@@ -1,9 +1,3 @@
-/*************************************************
- *  \file     GUI.java
- *  \brief    Chessnut grafikus felhasználói felülete
- *  \note     
- *  \date     2016. máj. 13.
- *************************************************/
 package chessnut.gui;
 
 import java.awt.Graphics;
@@ -30,7 +24,7 @@ import chessnut.logic.pieces.*;
 public class GUI extends JFrame implements IPlayer
 {
 	/**  Egyedi magicnumber a sorosításhoz   */
-	private static final long serialVersionUID = 1111111111111111L;  //!< Nem kell foglalkozni vele, ez a serializable osztályoknak kell, hogy azonosítani tudják magukat
+	private static final long serialVersionUID = 1111111111111111L;
 	
 	/** Ezen a referencián tudom a kapcsolatot tartani a játéklogikával */
 	private ILogic logic;
@@ -41,24 +35,34 @@ public class GUI extends JFrame implements IPlayer
 	/** Játék kezdése. Innentõl lehet kattintani */
 	private boolean gameStarted = false;
 	
-	/**  */
+	/** Saját elmentett sakktáblám */
 	private ChessBoard chessBoard;
 	
-	/** Sakkfigurák képei */
+	/**  Sakkfigurák képei  */
 	BufferedImage BBishop = null;
+	/**  Sakkfigurák képei  */
 	BufferedImage BKing = null;
+	/**  Sakkfigurák képei  */
 	BufferedImage BKnight = null;
+	/**  Sakkfigurák képei  */
 	BufferedImage BPawn = null;
+	/**  Sakkfigurák képei  */
 	BufferedImage BQueen = null;
+	/**  Sakkfigurák képei  */
 	BufferedImage BRook = null;
+	/**  Sakkfigurák képei  */
 	BufferedImage WBishop = null;
+	/**  Sakkfigurák képei  */
 	BufferedImage WKing = null;
+	/**  Sakkfigurák képei  */
 	BufferedImage WKnight = null;
+	/**  Sakkfigurák képei  */
 	BufferedImage WPawn = null;
+	/**  Sakkfigurák képei  */
 	BufferedImage WQueen = null;
+	/**  Sakkfigurák képei  */
 	BufferedImage WRook = null;
 	
-	//! \brief  Konstruktor
 	/** 
 	 * GUI konstruktor
 	 */
@@ -212,7 +216,6 @@ public class GUI extends JFrame implements IPlayer
 	}
 	
 	
-	//! \brief  Beállítható a referenciám a Logic-ra
 	/**
 	 * ILogic referencia beállítása
 	 * @param logic: ahova a referencia mutat
@@ -224,7 +227,6 @@ public class GUI extends JFrame implements IPlayer
 	}
 	
 	
-	//! \brief  Beérkezõ sakktábla lekezelése
 	/**
 	 * ChessBoard referencia beállítása
 	 * @param chessboard: akire a referencia mutat
@@ -233,15 +235,7 @@ public class GUI extends JFrame implements IPlayer
 	public void setChessboard(ChessBoard chessboard)
 	{
 		System.out.println("GUI handles setChessboard.");
-		
-		// TODO {GUI} Beérkezõ sakktábla lekezelése
-		
-		/*
-		 * Ami lényegében abból áll, hogy kirajzolom újra,
-		 * Meg megnézem, hogy highlight-ok vannak-e rajta és azokat is kirajzolom
-		 * 
-		 * Utóbbi a myPlayerColor alapján szelektálható, hogy vonatkozik-e rám
-		 */
+
 		this.chessBoard = chessboard;
 
 		/** Felület újbóli kirajzolása */
@@ -251,8 +245,7 @@ public class GUI extends JFrame implements IPlayer
 		
 	}
 	
-	
-	//! \brief  Gyalogváltás kérelem lekezelése
+
 	/**
 	 * Gyalogváltás kérelem lekezelése
 	 * @param position: ide érkezett be a játékos gyalogja
