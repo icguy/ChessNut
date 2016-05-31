@@ -1,9 +1,3 @@
-/*************************************************
- *  \file     GameLogic.java
- *  \brief    Ez lesz a játéklogika osztály
- *  \note     
- *  \date     2016. máj. 12.
- *************************************************/
 package chessnut.logic;
 
 import util.*;
@@ -13,23 +7,43 @@ import chessnut.logic.Position;
 import chessnut.logic.pieces.*;
 import chessnut.network.NetworkServer;
 
+/**
+ * Játéklogika osztálya
+ */
 public class GameLogic implements ILogic
 {
 	// Játék elemei
-	ChessBoard chessboard;     //!< Sakktáblám
-	IPlayer gui;               //!< Egyik játékos a helyi GUI
-	IPlayer opponent;          //!< Másik játékos: AI / Network
+	/**  Sakktáblám   */
+	ChessBoard chessboard;
+	
+	/**  Egyik játékos a helyi GUI   */
+	IPlayer gui;
+	
+	/**  Másik játékos az AI/Network   */
+	IPlayer opponent;
 
-	private boolean gameStarted = false;        //!< Azzal kezdõdik a játék, hogy az induló táblákat kiküldtem
-	private Position currentMoveStart = null;          //!< Folyamatban lévõ lépés kezdete. null, ha nincs semmi kijelölve
+	/**  Azzal kezdõdik a játék, hogy az induló táblákat kiküldtem   */
+	private boolean gameStarted = false;
+	
+	/**  Folyamatban lévõ lépés kezdete. null, ha nincs semmi kijelölve   */
+	private Position currentMoveStart = null; 
 
-	//! \brief  Létrehozás GUI alapján
+	
+
+	/**
+	 * Létrehozás GUI alapján
+	 * @param gui: amire a referencia beállítódik
+	 */
 	public GameLogic(IPlayer gui)
 	{
 		this.gui = gui;
 	}
 
-	//! \brief  Ezzel lehet beállítani a túloldali játékosra vonatkozó referenciát (AI / NetworkServer)
+
+	/**
+	 * Ezzel lehet beállítani a túloldali játékosra vonatkozó referenciát (AI / NetworkServer)
+	 * @param player: akire a referencia beállítódik
+	 */
 	@Override
 	public void setPlayer(IPlayer player)
 	{
@@ -38,7 +52,10 @@ public class GameLogic implements ILogic
 		sendInitialBoardToBothPlayers(); // Kiküldöm a kezdeti sakktáblákat is
 	}
 
-	//! \brief  Click kezelése
+	
+	/**
+	 * Játéklogika a click-et kezeli
+	 */
 	@Override
 	public void click(Position position, PlayerColor player)
 	{
@@ -69,6 +86,10 @@ public class GameLogic implements ILogic
 		}
 	}
 
+	
+	/**
+	 * Elsõ click kezelése
+	 */
 	private void firstClick(Position position)
 	{
 		// Ha olyan helyre kattintott, ahol nincs is bábu
@@ -95,6 +116,9 @@ public class GameLogic implements ILogic
 		SendChessboardToOne(chessboard.getNextToMove());
 	}
 
+	/**
+	 * Második click kezelése
+	 */
 	private void secondClick(Position position)
 	{
 		PlayerColor playerMakesMoveNow = chessboard.getNextToMove();
@@ -131,7 +155,10 @@ public class GameLogic implements ILogic
 		currentMoveStart = null;
 	}
 
-	//! \brief  Gyalog elõléptetés kezelése
+
+	/**
+	 * Gyalog elõléptetés kezelése
+	 */
 	@Override
 	public void promote(Piece piece)
 	{
@@ -156,7 +183,11 @@ public class GameLogic implements ILogic
 		}
 	}
 
-	//! \brief  Egy adott játékosnak tábla kiküldése
+
+	/**
+	 * Egy adott játékosnak sakktábla kiküldése
+	 * @param color: a játékos színe, aki táblát kap
+	 */
 	private void SendChessboardToOne(PlayerColor color)
 	{
 		if(color == PlayerColor.White)
@@ -173,14 +204,21 @@ public class GameLogic implements ILogic
 		}
 	}
 
-	//! \brief  Mindkét oldalnak kiküldöm a sakktáblát
+
+	/**
+	 * Mindkét oldalnak sakktábla kiküldése
+	 */
 	private void sendChessboardToBoth()
 	{
 		gui.setChessboard(chessboard);
 		opponent.setChessboard(chessboard);
 	}
 
-	//! \brief  Egy adott játékosnak gyalogváltás kérés kiküldése
+
+	/**
+	 * Egy adott játékosnak gyalogváltás kérés kiküldése
+	 * @param color: a játékos, aki kap
+	 */
 	private void sendNotifyPromotionToOne(PlayerColor color)
 	{
 		if(color == PlayerColor.White)
@@ -197,8 +235,11 @@ public class GameLogic implements ILogic
 		}
 	}
 
-	//! \brief  Kezdeti sakktáblát kiküldöm mindkét félnek - csak egyszer, az elején
-	//! \note   Külön thread-bõl fut, hogy ne fagyja össze magát a várakozásba
+
+	/**
+	 * Kezdeti sakktáblát kiküldöm mindkét félnek - csak egyszer, az elején
+	 * Külön thread-bõl fut, hogy ne fagyja össze magát a várakozásba.
+	 */
 	private void sendInitialBoardToBothPlayers()
 	{
 		if(!gameStarted) // Csak egyszer lehet
@@ -208,7 +249,10 @@ public class GameLogic implements ILogic
 		}
 	}
 
-	//! \brief  Ez várja, hogy a kliens becsatlakozzon, majd kiküldi a kezdõ játékállást
+
+	/**
+	 * Ez várja, hogy a kliens becsatlakozzon, majd kiküldi a kezdõ játékállást
+	 */
 	private class ConnectionWaitingThread implements Runnable
 	{
 		@Override

@@ -194,18 +194,18 @@ public class GUI extends JFrame implements IPlayer
 		
 		/** Sakkfigurák képeinek beolvasása  */
 		try {
-			BBishop = ImageIO.read(getClass().getResource(("pictures\\BBishop.png")));
-			BKing = ImageIO.read(getClass().getResource(("pictures\\BKing.png")));
-			BKnight = ImageIO.read(getClass().getResource(("pictures\\BKnight.png")));
-			BPawn = ImageIO.read(getClass().getResource(("pictures\\BPawn.png")));
-			BQueen = ImageIO.read(getClass().getResource(("pictures\\BQueen.png")));
-			BRook = ImageIO.read(getClass().getResource(("pictures\\BRook.png")));
-			WBishop = ImageIO.read(getClass().getResource(("pictures\\WBishop.png")));
-			WKing = ImageIO.read(getClass().getResource(("pictures\\WKing.png")));
-			WKnight = ImageIO.read(getClass().getResource(("pictures\\WKnight.png")));
-			WPawn = ImageIO.read(getClass().getResource(("pictures\\WPawn.png")));
-			WQueen = ImageIO.read(getClass().getResource(("pictures\\WQueen.png")));
-			WRook = ImageIO.read(getClass().getResource(("pictures\\WRook.png")));
+			BBishop = ImageIO.read(getClass().getResource(("pictures/BBishop.png")));
+			BKing = ImageIO.read(getClass().getResource(("pictures/BKing.png")));
+			BKnight = ImageIO.read(getClass().getResource(("pictures/BKnight.png")));
+			BPawn = ImageIO.read(getClass().getResource(("pictures/BPawn.png")));
+			BQueen = ImageIO.read(getClass().getResource(("pictures/BQueen.png")));
+			BRook = ImageIO.read(getClass().getResource(("pictures/BRook.png")));
+			WBishop = ImageIO.read(getClass().getResource(("pictures/WBishop.png")));
+			WKing = ImageIO.read(getClass().getResource(("pictures/WKing.png")));
+			WKnight = ImageIO.read(getClass().getResource(("pictures/WKnight.png")));
+			WPawn = ImageIO.read(getClass().getResource(("pictures/WPawn.png")));
+			WQueen = ImageIO.read(getClass().getResource(("pictures/WQueen.png")));
+			WRook = ImageIO.read(getClass().getResource(("pictures/WRook.png")));
 		} catch (Exception ex)
 		{
 			System.out.println("File not found: " + ex.getMessage());
