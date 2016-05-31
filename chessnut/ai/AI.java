@@ -62,7 +62,7 @@ public class AI implements IPlayer
 		
 	/**
 	* Negamax keresési algoritmus, a következo dokumentum alapján:
-	* http://homepages.cwi.nl/~paulk/theses/Carolus.pdf -> 12. oldal
+	* http://homepages.cwi.nl/~paulk/theses/Carolus.pdf  12. oldal
 	* @param moves: a kiszámolt lépés
 	* @param board: az aktuális sakktábla
 	* @param depth: a keresés mélysége
