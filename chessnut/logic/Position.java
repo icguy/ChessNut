@@ -2,17 +2,33 @@ package chessnut.logic;
 
 import java.io.Serializable;
 
-/*
- * Represents a position on the board
- * Ranks (rows) are represented 0 through 7, and marked 1 through 8 on a physical board.
- * Files (columns) are represented 0 through 7, and marked 'a' through 'h' on a physical board.
+/**
+ * A sakktábla egy pozícióját reprezentálja
+ * A sorok (rank) 0-tól 7-ig számozódnak, a valódi táblán 1-tõl 8-ig vannak jelölve.
+ * Az oszlopok (file) 0-tól 7-ig számozódnak, a valódi táblán a-tól h-ig vannak jelölve.
  */
 public class Position implements Serializable
 {
-	private static final long serialVersionUID = 2758435244468732197L;  //!< Egyedi magicnumber a sorosításhoz
+	/**
+	 * Sorosításhoz szükséges azonosító
+	 */
+	private static final long serialVersionUID = 2758435244468732197L;
 	
-	private final int rank, file;
+	/**
+	 * A pozíció sora
+	 */
+	private final int rank;
+	
+	/**
+	 * A pozíció oszlopa
+	 */
+	private final int file;
 
+	/**
+	 * Konstruktor
+	 * @param rank A pozíció sora
+	 * @param file A pozíció oszlopa
+	 */
 	public Position(int rank, int file)
 	{
 		this.rank = rank;
@@ -31,6 +47,12 @@ public class Position implements Serializable
 		return file;
 	}
 
+	/**
+	 * Megvizsgálja, hogy az adott sor/oszlop kombináció egy sakktábla tartományán belülre esik el
+	 * @param rank a pozíció sora
+	 * @param file a pozíció oszlopa
+	 * @return True, ha a megadott paraméterek létezõ pozícióra mutatnak
+	 */
 	private static boolean inRange(int rank, int file)
 	{
 		return rank >= 0 && rank < 8 && file >= 0 && file < 8;
@@ -57,6 +79,12 @@ public class Position implements Serializable
 		return file * 10 + rank;		
 	};
 	
+	/**
+	 * Megrpóbál létrehozni egy position objektumot a megadott adatokból
+	 * @param rank A pozíció sora
+	 * @param file A pozíció oszlopa
+	 * @return A létrehozott pozíció, vagy null, ha az adatok kimutatnak a sakktáblán kívülre
+	 */
 	static public Position tryCreate(int rank, int file)
 	{
 		if(!inRange(rank, file))
