@@ -4,8 +4,10 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import chessnut.logic.pieces.*;
 
-/*
+/**
  * A sakktábla állását, és a kijelöléseket tároló osztály.
+ * Ismeri a sakk szabályait, képes konzisztens állapotban tartani a táblát, nem enged meg szabálytalan lépést.
+ * Kívülrõl lekérhetõ a játék állapota, a sakktábla állapota, az egyes mezõkön álló bábuk, a kijelölt mezõk.
  */
 public class ChessBoard implements Serializable
 {
