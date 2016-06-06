@@ -31,7 +31,7 @@ public class InputIPAddrDialog extends JFrame
 		/** Sztring bekérése */
 		IPAddr = (String) JOptionPane.showInputDialog(this,
 				"Server IP:\n",
-				"", JOptionPane.PLAIN_MESSAGE);
+				"", JOptionPane.PLAIN_MESSAGE, null, null, "localhost");
 
 		setVisible(true);               // Láthatóvá teszem az ablakot
 	}
