@@ -112,10 +112,10 @@ public class GUI extends JFrame implements IPlayer
 				{
 					InputIPAddrDialog ipDialog = new InputIPAddrDialog();
 					String IP = null;
-					while ( IP == null )
-					{
-						IP = ipDialog.getIp();
-					}
+					IP = ipDialog.getIp();
+					ipDialog.setVisible(false);
+					if(IP == null)
+						return;
 					
 					Main.setupClient(IP);  // Kliens szetup
 					myPlayerColor = PlayerColor.Black;
