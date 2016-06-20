@@ -309,60 +309,71 @@ public class GUI extends JFrame implements IPlayer
 		Color lightBrown = new Color(232, 194, 145);
 
 		/** Mezõk színe a lehetséges lépések helyein */
-		Color selectColor1 = new Color((int) (139 * 1.5), (int) (69 * 1.5), (int) (19 * 1.5));
-		Color selectColor2 = new Color((int) (255), (int) (194 * 1.3), (int) (145 * 1.5));
+		Color sourceColor = new Color(0, 160, 0);
+		Color destinationColor = Color.BLUE;
 
 		/** Ablak méreteinek meghatározása */
 		int width = getContentPane().getWidth();
 		int height = getContentPane().getHeight();
 		int yOffset = getHeight() - getContentPane().getHeight();
 
+		float selectionSizeRelative = 0.1f;
 		int size;
+		int selectionSize;
 
 		if (width <= height)
 		{
 			size = width / 8;
 		}
 		else
+		{
 			size = height / 8;
+		}
+		selectionSize = (int) (size * selectionSizeRelative);
 
 		for (int j = 0; j < 8; j++)
 		{
 			for (int i = 0; i < 8; i++)
-
 			{
+				Color backColor;
 				if ((i + j) % 2 == 0)
 				{
-					g.setColor(darkBrown);
+					backColor = darkBrown;
 				}
 				else
 				{
-					g.setColor(lightBrown);
+					backColor = lightBrown;
 				}
+				g.setColor(backColor);
 				int y = (7 - i) * size + yOffset;
 				int x = j * size;
 				g.fillRect(x, y, size, size);
 
 				if (this.chessBoard != null)
 				{
-					Piece p = chessBoard.getPiece(new Position(i, j));
 					if (chessBoard.getSelections() != null)
 					{
 						SelectionType sel = chessBoard.getSelections()[i][j];
 						if (sel != null)
 						{
-							if ((i + j) % 2 == 0)
+							Color selectionColor = Color.PINK;
+							if (sel == SelectionType.SourceSelected)
 							{
-								g.setColor(selectColor1);
+								selectionColor = sourceColor;
 							}
-							else
+							else if (sel == SelectionType.DestinationSelected)
 							{
-								g.setColor(selectColor2);
+								selectionColor = destinationColor;
 							}
+							g.setColor(selectionColor);
 							g.fillRect(x, y, size, size);
+
+							g.setColor(backColor);
+							g.fillRect(x + selectionSize, y + selectionSize, size - 2 * selectionSize, size - 2 * selectionSize);
 						}
 					}
 
+					Piece p = chessBoard.getPiece(new Position(i, j));
 					if (p != null)
 					{
 
